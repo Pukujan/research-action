@@ -6,7 +6,7 @@ This repository is the canonical program/control-plane repository for the 9-laye
 Before changing behavior, read:
 1. `README.md`
 2. `HANDOFF.md`
-3. GitHub issues #1–#6
+3. GitHub issues #1–#7
 4. relevant schemas/tests
 
 Do not rely on prior chat/session memory when repo state and chat disagree. The repository and observed execution results are authoritative.
@@ -47,6 +47,21 @@ Core rule: **overlap is allowed for evidence/signals, shadow evaluation, diagnos
 - Cross-layer tests must prove upstream hard failures and required review states cannot be bypassed downstream.
 
 Canonical ownership matrix is in issue #5.
+
+## LLM-as-judge rule
+Use deterministic/executable oracles whenever a question is mechanically decidable. Use LLM judges only for semantic or qualitative ambiguity, with a versioned rubric, structured output, abstention, hidden-holdout calibration, and full trace/provenance.
+
+- L1: bounded semantic source dimensions only; deterministic hard failures dominate.
+- L2: advisory for fuzzy span/location mapping; deterministic grounding is authoritative.
+- L3: primary intended LLM-judge layer for semantic support/contradiction, calibrated against human-labeled hidden data.
+- L4: non-authoritative; ingestion policy is deterministic.
+- L5: may classify ambiguous intended-use text into a fixed taxonomy; policy thresholds remain deterministic.
+- L6: LLM judge is prohibited as the final release oracle.
+- L7: advisory comparator; benchmark evidence and human-approved policy own adoption decisions.
+- L8: strong rubric-bounded use for plan/test sufficiency, but actual execution results remain separate evidence.
+- L9: explanatory only; provenance completeness/integrity is deterministic.
+
+LLM trajectory judges are secondary detectors; deterministic sandbox/test/permission protections come first. Never let majority votes from correlated judges masquerade as independent evidence. See issue #7.
 
 ## Program methodology
 ### SDD — mandatory before implementation at contract surfaces
@@ -110,7 +125,7 @@ Dependency outages, timeouts, malformed outputs, retries, stale cache, DB confli
 Only after a real distributed production topology exists. Prefer deterministic fault injection first.
 
 ## Cross-layer architecture
-- This repo owns canonical contracts, methodology, provenance semantics, telemetry conventions, compatibility rules, policy vocabulary/ownership rules, agentic-validation vocabulary, and cross-layer fixtures.
+- This repo owns canonical contracts, methodology, provenance semantics, telemetry conventions, compatibility rules, policy vocabulary/ownership rules, agentic-validation vocabulary, LLM-judge governance, and cross-layer fixtures.
 - Layer repos own layer-specific implementation and live handoff state.
 - External OSS/services are behind adapters and must not define canonical cross-layer types.
 - Keep layer implementations replaceable.
