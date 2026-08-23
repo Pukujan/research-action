@@ -25,6 +25,24 @@ export const FAILURE_CLASSES = [
 ] as const;
 export type FailureClass = (typeof FAILURE_CLASSES)[number];
 
+export const DECISION_AUTHORITIES = [
+  'AUTHORITATIVE',
+  'SHADOW',
+  'DIAGNOSTIC'
+] as const;
+export type DecisionAuthority = (typeof DECISION_AUTHORITIES)[number];
+
+export interface DecisionContext {
+  /** Layer that owns the semantics of this decision. */
+  readonly owningLayer: LayerId;
+  /** Stable scope identifier such as `source-suitability` or `action-release`. */
+  readonly scope: string;
+  /** Stable policy identifier; policyVersion remains bound at the envelope level. */
+  readonly policyId: string;
+  /** Whether this output may drive policy or is comparison/diagnostic only. */
+  readonly authority: DecisionAuthority;
+}
+
 export interface Failure {
   readonly code: string;
   readonly class: FailureClass;
@@ -100,6 +118,7 @@ export interface AssuranceEnvelope<TPayload> {
   readonly epistemicState: EpistemicState;
   readonly failures: readonly Failure[];
   readonly provenance: readonly ProvenanceLink[];
+  readonly decisionContext: DecisionContext;
   readonly policyVersion: string;
   readonly evaluatorVersion: string;
   readonly producedAt: string;
