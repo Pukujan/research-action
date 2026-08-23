@@ -4,71 +4,72 @@
 - Date: 2026-08-23
 - Repository: `Pukujan/research-action`
 - Branch: `main`
-- Plan status: **PRE_LOCK_AUDIT — design corrections substantially complete, not yet LOCKED_V1**
+- Architecture/methodology plan: **LOCKED_V1**
+- Adversarial audit: **issue #8 completed/closed**
 - Current delivery gate: **Gate A — implemented / NOT execution-verified**
 
+`LOCKED_V1` locks the architecture/methodology plan only. It does **not** verify Gate A, INITE Brain, Layer 1, any client integration, or epistemic quality.
+
 ## Current canonical issues
-- #1 shared contracts / SWE / adapters / verification record
-- #2 program plan and Gate A/B0/B1/B2/C/D/E/F sequence
+- #1 shared contracts / SWE / adapters / operational trust/freshness ownership
+- #2 LOCKED_V1 program plan and Gate A/B0/B1/B2/C/D/E/F sequence
 - #3 W3C PROV
 - #4 session continuity
 - #5 policy ownership + assurance DAG
 - #6 agentic coding validation A1–A5
 - #7 LLM-as-judge governance
-- #8 adversarial pre-lock audit / scope control
+- #8 completed adversarial audit / scope control
 
-## Adversarial audit result
-The audit found real contradictions and reduced scope rather than adding a universal validation checklist.
+## What the adversarial audit changed
+The audit reduced scope and corrected contradictions rather than adding a universal validation checklist:
+- L1 source suitability vs L2 exact grounding ownership separated.
+- L6 is final action gate over a typed assurance DAG; L7/L8 may feed it.
+- host milestones split B0 runtime / B1 one client / B2 second-client portability.
+- OpenCode auto-interception is version/capability-probe dependent; explicit assured MCP/tool is fallback.
+- protected holdout requires grader custody outside normal implementation-agent access.
+- `ABSTAIN` does not automatically become human review.
+- source-ranker shared-foundation issue is conformance-only.
+- A1–A5 is the only validation-profile taxonomy; methods are failure/risk triggered.
+- Layer-7 candidate disposition is distinct from portfolio greenfield conclusion.
+- auth/least privilege, telemetry/provenance data safety, retention and assessment freshness have explicit pre-enforcement ownership.
+- same-agent visible tests are development evidence, not independent hidden acceptance.
 
-Resolved/high-priority findings:
-- L1 source suitability vs L2 exact grounding failure ownership separated.
-- L6 is the final action gate over an assurance DAG, not a fixed linear step before L7/L8.
-- first live host work split into B0 runtime, B1 one client, B2 second-client portability.
-- OpenCode automatic interception is version/capability-probe dependent; explicit assured MCP/tool path is fallback.
-- hidden holdout requires grader custody outside normal implementation-agent access.
-- `ABSTAIN` does not automatically mean human review.
-- `source-ranker` shared-foundation issue is conformance-only.
-- A1–A5 is the only validation-profile taxonomy; advanced validation is failure/risk triggered.
-- Layer-7 candidate disposition is distinct from portfolio `GREENFIELD_REQUIRED` conclusion.
-- operational pre-enforcement requirements now include auth/least privilege, trace/provenance redaction/retention, and assessment freshness/revalidation.
-
-Canonical audit: issue #8.
-
-## Shared contract changes — IMPLEMENTED / UNVERIFIED
-Latest contract implementation sequence includes:
-- `DecisionContext` on every `AssuranceEnvelope<T>`:
+## Shared contract state — IMPLEMENTED / UNVERIFIED
+The current pre-release contract includes:
+- `DecisionContext` on every assurance envelope:
   - `owningLayer`
   - `scope`
   - `policyId`
   - `authority: AUTHORITATIVE | SHADOW | DIAGNOSTIC`
-- JSON Schema requires that context.
-- canonical Layer-1 fixture now identifies its decision as authoritative Layer-1 `source-suitability`.
-- new `SliceVerificationRecord` type/schema.
-- pre-execution Gate-A fixture deliberately says `NOT_RUN` and lists what it does **not** prove.
-- contract tests now test decision identity and that the pre-execution record cannot masquerade as verified.
+- JSON Schema for the decision context.
+- canonical L1 fixture identifies authoritative Layer-1 `source-suitability` scope.
+- `SliceVerificationRecord` type/schema.
+- pre-execution Gate-A fixture deliberately set to `NOT_RUN` with `proves[]` and `doesNotProve[]`.
+- contract tests for decision identity and verification-record anti-self-certification.
 
-Important shared contract commit consumed by Layer 1:
-- `67af56a17f1616e289e4e709facdec3098280b97` — contract tests + audited decision/verification schema state used by `source-ranker`.
+Exact shared contract revision currently consumed by `source-ranker`:
+- `67af56a17f1616e289e4e709facdec3098280b97`
 
 Later documentation commits do not change that pinned runtime contract unless explicitly advanced and tested.
 
-## Current verification state
-### Implemented/observed in Git
-- issues/specs updated
-- shared decision identity committed
-- slice verification type/schema/fixture committed
-- canonical fixture/tests updated
+## Verification state
+### Observed/implemented in Git
+- architecture issues/specs audited and locked
+- decision identity committed
+- slice-verification type/schema/fixture committed
+- canonical contract fixture/tests updated
+- layer/client handoff sequence updated
 
 ### NOT execution-verified
-No command-capable run has yet proven current `research-action` passes:
-- install/lockfile resolution
+No command-capable run has yet established current `research-action` passes:
+- dependency install/lockfile resolution
 - formatting
 - lint
 - strict TypeScript
 - schema/contract tests
 - build
 
-Do not promote Gate A or the pre-execution slice record to `VERIFIED` until those results are observed.
+Gate A remains **IMPLEMENTED / NOT VERIFIED**.
 
 ## Exact next work for Luna/local executor
 1. Read `AGENTS.md`, this file, issues #1–#8, and `source-ranker/LOCAL-CODEX-HANDOFF.md`.
@@ -81,28 +82,31 @@ Do not promote Gate A or the pre-execution slice record to `VERIFIED` until thos
    npm run test
    npm run build
    ```
-3. Fix only observed implementation/tooling defects. Semantic changes return to SDD/PDD and issue #8.
+3. Fix only observed implementation/tooling defects. Any semantic architecture change requires explicit LOCKED_V1 change control / SDD/PDD.
 4. Commit/inspect `package-lock.json`; only then move CI to `npm ci`/cache.
-5. Update `fixtures/v1/slice-verification-gate-a.json` (or create an observed successor record) with exact execution evidence; never overwrite `NOT_RUN` with `VERIFIED` without actual evidence refs/results.
-6. Verify `source-ranker` against exact contracts commit and its current tests.
-7. Only after both repos are green, execute B0: real Brain-backed assessment -> OTel/Phoenix, positive + failure/abstain, human-inspectable.
-8. After B0, choose exactly one B1 client. A second client is B2, not a prerequisite for B1.
+5. Update/create the Gate-A `SliceVerificationRecord` using actual execution evidence. Never promote `NOT_RUN` through prose.
+6. Verify `source-ranker` against its exact contract pin and current visible tests.
+7. After both repos are green, run B0: real Brain-backed assessment -> OTel/Phoenix, positive + failure/abstain, human-inspectable.
+8. After B0, choose exactly one B1 client. B2 second-client portability is later.
 
-## Plan-lock criteria still to close
-Before marking `LOCKED_V1`:
-- read back machine-readable decision context + SliceVerificationRecord for static consistency;
-- ensure source/local handoffs use post-audit sequence and current test count;
-- ensure operational safety/freshness has an assigned pre-enforcement owner (currently shared platform/L5/L6 as specified in issues #1/#2/#8);
-- then update issue #2 status to `LOCKED_V1` and record the lock decision/version.
+## Change control after LOCKED_V1
+Architecture/methodology changes must:
+1. name the failure/evidence motivating the change;
+2. identify affected owner/layer/contracts;
+3. update SDD/PDD acceptance criteria;
+4. version compatibility semantics if required;
+5. update tests/fixtures/handoffs;
+6. explicitly supersede LOCKED_V1 rather than silently drifting it.
 
-Actual B0/B1 runtime execution is **not** required to lock the architecture design; those gates become verified only through their later observed verification records.
+Implementation details inside an already-owned boundary do not require a new architecture-plan version unless they change externally observable semantics.
 
 ## Do not repeat
-- do not reintroduce a second validation ladder;
-- do not make every advanced validation method mandatory everywhere;
-- do not conflate L1 source applicability with L2 citation/span existence;
-- do not force ChatGPT + OpenCode + Codex into the first client milestone;
-- do not assume OpenCode hook names/coverage without a capability probe;
-- do not treat visible agent-authored tests as a protected hidden oracle;
-- do not add a DB for slice verification records yet;
-- do not claim Brain solves complete Layer 1 or that any current test suite passed before execution.
+- no second validation ladder
+- no universal advanced-test checklist
+- no L1/L2 grounding ownership collapse
+- no multi-client requirement for B1
+- no assumed OpenCode hook coverage
+- no visible-test-as-hidden-oracle claim
+- no extra DB for slice records yet
+- no Brain-is-solved claim
+- no runtime `VERIFIED` claim before observed evidence
