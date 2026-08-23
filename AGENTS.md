@@ -6,136 +6,160 @@ This repository is the canonical program/control-plane repository for the 9-laye
 Before changing behavior, read:
 1. `README.md`
 2. `HANDOFF.md`
-3. GitHub issues #1–#7
-4. relevant schemas/tests
+3. GitHub issues #1–#8
+4. relevant schemas/tests/fixtures
 
-Do not rely on prior chat/session memory when repo state and chat disagree. The repository and observed execution results are authoritative.
+Current architecture status is recorded in issue #2 and issue #8. Do not rely on prior chat/session memory when repository state and observed execution disagree.
 
 ## Epistemic discipline
-Never collapse these states:
+Never collapse:
 - `IMPLEMENTED` ≠ `VERIFIED`
 - `PROJECT_CLAIMED` ≠ `REPRODUCED`
 - `REPRODUCED` ≠ `TASK_MATCHED`
 - `TASK_MATCHED` ≠ `BENCHMARKED`
-- passing software tests ≠ good epistemic performance
+- passing software tests ≠ epistemic-quality proof
+- client/plugin integration success ≠ Layer quality
 
-Do not claim a test, benchmark, integration, service, or behavior passed unless the execution result was actually observed.
+Never claim a test, benchmark, service, integration, slice, or behavior passed unless the execution result was observed and recorded.
+
+## Three independent axes
+Do not mix these:
+
+### Delivery stage
+`A -> B0 -> B1 -> B2 -> C -> D -> E -> F`
+
+### Validation profile
+Use only the A1–A5 taxonomy in issue #6. Layer 5 eventually selects the required profile for the risk/change class; Layer 8 checks verification sufficiency.
+
+### Runtime mode
+`observe | warn | enforce`
+
+Do not invent a second assurance ladder.
 
 ## Agent work allocation
 When practical, separate assurance/spec/test authoring from execution evidence.
 
 ### Assurance/spec/test-authoring role
-Owns program/layer SDD/PDD, acceptance criteria, deterministic test design/implementation, adversarial fixtures, property/fuzz/metamorphic specifications, mutation targets, benchmark/hidden-holdout design, interface decisions, and review of observed execution failures/results.
+Owns SDD/PDD, acceptance criteria, deterministic tests, adversarial fixtures, property/fuzz/metamorphic specifications, mutation targets, benchmark/holdout design, interface decisions, and review of observed failures.
 
-Artifacts authored in this role remain `IMPLEMENTED / UNVERIFIED` until an execution-capable environment produces observed evidence.
+Artifacts authored here remain `IMPLEMENTED / UNVERIFIED` until a command-capable environment produces evidence.
 
 ### Local execution role
-Luna, local Codex/OpenCode, or another command-capable executor owns dependency installation, lockfiles, format/lint/typecheck/test/build execution, runtime property/fuzz/mutation runs, Docker/service bring-up, live OTel/Phoenix verification, integration smoke tests, runtime fault injection, and recording exact outputs/versions/trace identifiers in the layer `HANDOFF.md`.
+Luna, local Codex/OpenCode, or another command-capable executor owns dependency installation, lockfiles, format/lint/typecheck/test/build runs, runtime property/fuzz/mutation runs, service bring-up, live OTel/Phoenix verification, client smoke tests, runtime fault injection, and exact result/version/trace recording.
 
-Executors may repair implementation defects but must not weaken protocol invariants, schemas, hard failures, hidden-holdout protections, or epistemic gates merely to make tests pass. Semantic changes return to SDD/PDD first.
+Executors may fix implementation defects but MUST NOT weaken schemas, protocol invariants, hard-failure semantics, holdout protections, or epistemic gates merely to make tests pass. Semantic changes return to SDD/PDD first.
 
-Layer-specific issue logs may define more exact role allocation. For Layer 1 see `Pukujan/source-ranker` issue #10.
+Layer 1 details: `Pukujan/source-ranker` issue #10.
 
 ## Policy ownership rule
-Policy boundaries are frozen early, not deferred until the final end-to-end pipeline.
+Freeze decision ownership early; do not wait for the final E2E build.
 
-Core rule: **overlap is allowed for evidence/signals, shadow evaluation, diagnostics, and tests; consequential decision authority has exactly one canonical owner.**
+**Signals/tests may overlap. Authoritative decision ownership may not.**
 
-- A layer may preserve or recompute a neighboring signal for comparison, but the shadow output is non-authoritative.
-- A downstream layer must not silently re-decide or overwrite an upstream layer's canonical assessment.
-- Policy ownership changes require a recorded architectural decision, versioned contract transition, and compatibility tests.
-- Cross-layer tests must prove upstream hard failures and required review states cannot be bypassed downstream.
+Every consequential decision must identify:
+- owning layer
+- decision scope
+- policy id/version
+- authority: `AUTHORITATIVE | SHADOW | DIAGNOSTIC`
 
-Canonical ownership matrix is in issue #5.
+A downstream layer may consume/preserve/recompute signals for comparison but may not silently overwrite an upstream authoritative decision. Changes of ownership require a recorded, versioned transition.
+
+Canonical ownership/DAG: issue #5.
+
+Important Layer-7 distinction:
+- candidate disposition: `ADOPT | EXTEND | COMPOSE | REJECT`
+- portfolio conclusion: `REUSE_SUFFICIENT | GREENFIELD_REQUIRED | INSUFFICIENT_EVIDENCE`
+
+Rejecting one candidate does not prove greenfield is required.
 
 ## LLM-as-judge rule
-Use deterministic/executable oracles whenever a question is mechanically decidable. Use LLM judges only for semantic or qualitative ambiguity, with a versioned rubric, structured output, abstention, hidden-holdout calibration, and full trace/provenance.
+Issue #7 is canonical.
 
-- L1: bounded semantic source dimensions only; deterministic hard failures dominate.
-- L2: advisory for fuzzy span/location mapping; deterministic grounding is authoritative.
-- L3: primary intended LLM-judge layer for semantic support/contradiction, calibrated against human-labeled hidden data.
-- L4: non-authoritative; ingestion policy is deterministic.
-- L5: may classify ambiguous intended-use text into a fixed taxonomy; policy thresholds remain deterministic.
-- L6: LLM judge is prohibited as the final release oracle.
-- L7: advisory comparator; benchmark evidence and human-approved policy own adoption decisions.
-- L8: strong rubric-bounded use for plan/test sufficiency, but actual execution results remain separate evidence.
-- L9: explanatory only; provenance completeness/integrity is deterministic.
+Use deterministic/executable oracles when mechanically decidable. Use LLM judges only for bounded semantic/qualitative ambiguity with versioned rubric, structured output, abstention, hidden-holdout calibration, and trace/provenance.
 
-LLM trajectory judges are secondary detectors; deterministic sandbox/test/permission protections come first. Never let majority votes from correlated judges masquerade as independent evidence. See issue #7.
+- L1: bounded semantic source dimensions; deterministic failures dominate.
+- L2: advisory for fuzzy grounding assistance; deterministic grounding authoritative.
+- L3: primary semantic-support judge layer.
+- L4: non-authoritative for ingestion policy.
+- L5: classification aid into fixed taxonomy; policy remains deterministic.
+- L6: LLM prohibited as final release oracle.
+- L7: advisory comparator; task-matched benchmark + policy/human gate own disposition.
+- L8: rubric-bounded plan/test sufficiency; cannot claim an execution passed.
+- L9: explanatory only; provenance integrity deterministic.
+
+LLM trajectory judges are secondary defense. Deterministic permissions/hidden-test custody/diff/sandbox controls come first.
 
 ## Program methodology
-### SDD — mandatory before implementation at contract surfaces
-Use for cross-layer schemas, state meanings, hard failures, API/MCP/plugin contracts, error vocabulary, provenance, policy, and versioning.
+### SDD / PDD
+Required before changes to contracts, states, failure semantics, APIs, provenance, policy, ownership, escalation, retries/idempotency, or promotion rules.
 
-### PDD / property-driven protocol design — mandatory at boundaries and gates
-Specify invariants for state transitions, retries/idempotency, evidence-root independence, release gates, and HITL escalation. Make properties executable where practical.
+### TDD
+Required for deterministic parsers/canonicalization/version logic/hard failures/schema validation/policy/adapters/provenance/state transitions.
 
-### TDD — mandatory for deterministic code
-Use for parsers, canonicalization, version/time checks, hard failures, schema validation, policy, state transitions, adapters, provenance construction, and migrations.
+### Advanced validation
+Risk/failure triggered, not universal. Issue #6 defines A1–A5; issue #8 defines scope-control questions.
 
-### Property/fuzz testing — required where input spaces are broad
-URLs, identifiers, dates/versions, schema parsing, malformed provider output, adapters, and state machines.
+Use as justified:
+- property/fuzz for broad input spaces
+- metamorphic for semantic invariants
+- mutation for critical gates/evaluators
+- hidden acceptance/holdouts for independent empirical evidence
+- repeated trials for stochastic components
+- differential/state-machine/idempotency for matching failure models
+- fault/security/trajectory tests before affected enforce/production paths
+- TLA+/formal proof/chaos only when their specific failure models exist
 
-### Metamorphic testing — required for semantic invariants
-Examples: duplicate origins cannot increase independence; adding a hard failure cannot improve admissibility; stale/wrong-version evidence cannot improve fit.
+## HITL
+Human review is targeted:
+- benchmark labeling/adjudication
+- sampled development calibration in observe/warn
+- risk-policy-required high-risk/enforce escalation
+- lineage/authority corrections
+- architecture adoption/portfolio decisions
 
-### Mutation testing — required for safety-critical deterministic gates
-Hard failures, policy thresholds, evidence-root accounting, escalation, ACCEPT/ABSTAIN/REJECT transitions, and provenance enforcement. Do not waste mutation budget on trivial DTOs/generated glue.
+`ABSTAIN` does not automatically create a human-review task.
 
-### Hidden holdouts — required for empirical/LLM/IR components
-Never tune prompts/models/thresholds against protected release-gate labels. Keep visible dev data and hidden holdouts separate.
+## W3C PROV + OTel
+- W3C PROV-DM/PROV-O = durable semantic derivation/provenance.
+- OTel/W3C Trace Context = runtime observability/correlation.
 
-### IR evaluation — required wherever evidence is retrieved
-Measure retrieval separately from verification: Recall@k, MRR/NDCG, primary-source recall, counterevidence recall, temporal/version errors, lineage clustering.
+Every important output points backward to its exact inputs. No private chain-of-thought in telemetry/provenance.
 
-### HITL — selective
-Use for benchmark adjudication, high-risk uncertainty, credible-source conflict, lineage merge/split, authority overrides, and final ADOPT/EXTEND/COMPOSE/REJECT decisions.
+## Slice verification
+Every behavior-bearing slice gets a `SliceVerificationRecord` with actual executed checks/smokes/traces/PROV/human annotations and explicit `proves` / `doesNotProve` fields.
 
-### OTel — mandatory from first executable slice
-Use W3C trace context. Record structured inputs/outputs, evidence refs, decisions, versions, failures, and human interventions. Never record private chain-of-thought.
+A pre-execution record MUST remain `NOT_RUN`/`PARTIAL`; do not mark `VERIFIED` by editing prose.
 
-### W3C PROV — canonical durable provenance semantics
-Use PROV-DM / PROV-O concepts for Entity, Activity, Agent and derivation/attribution relations. OTel is operational tracing; PROV is durable semantic provenance.
+Human verification path:
+- Gate A: inspect schema/adversarial cases + actual CI result.
+- B0: inspect real Brain-backed source assessments in Phoenix, including positive and failure/abstain cases.
+- B1: inspect one explicit assured client workflow.
+- B2: verify a second client consumes the same contract without core semantic changes.
 
-### Agentic coding validation — risk-gated
-Issue #6 defines the shared coding-agent validation stack. Use as applicable:
-- independent hidden acceptance + regression (`FAIL_TO_PASS` / `PASS_TO_PASS`)
-- reproducible sandbox/configuration
-- differential/oracle testing
-- repeated-run reliability and uncertainty
-- trajectory/tamper validation
-- idempotency and state-machine/sequence tests
-- mutation testing of critical evaluators
-- security/adversarial checks
-- performance/resource regression checks
-- long-horizon reliability evaluation for autonomous coding workflows
+## Client/platform boundaries
+Host integrations are adapters, never canonical semantics.
 
-Layer 5 chooses the required assurance level for the risk/change class; Layer 8 verifies the plan/tests satisfy it; actual execution results remain evidence artifacts, not opinions.
+- ChatGPT: guaranteed coverage uses an explicit custom MCP/App workflow; do not claim global interception of native tools/web.
+- Codex: plugin/app-backed workflow may reuse the same canonical service.
+- OpenCode: hook/event interception is version-specific/experimental. Pin runtime/plugin/SDK, capability-probe exact installed behavior, and use an explicit assured MCP/tool path until coverage is proven.
 
-### TLA+ — conditional
-Use for meaningful async/distributed state protocols, retries, queues, leases, stale completions, or multi-stage promotion. Do not use it to prove empirical ranking quality.
+## Operational safety before canary/enforce
+Must have assigned owners and verification for:
+- service/client authentication and least privilege
+- secret/PII/sensitive-data minimization/redaction and trace retention/export policy
+- untrusted source content treated as data, not instructions
+- assessment freshness/revalidation/supersession policy
+- pinned runtime/plugin/model/policy configs
+- rollback/disable path
 
-### Lean 4 — optional / not initial
-Only if a small pure evidence/admissibility calculus emerges whose mathematical properties are worth proving.
-
-### Fault injection — required before enforcement/production
-Dependency outages, timeouts, malformed outputs, retries, stale cache, DB conflicts, telemetry outages, worker crashes. Assurance dependency failure must not become ACCEPT.
-
-### Chaos engineering — later/conditional
-Only after a real distributed production topology exists. Prefer deterministic fault injection first.
-
-## Cross-layer architecture
-- This repo owns canonical contracts, methodology, provenance semantics, telemetry conventions, compatibility rules, policy vocabulary/ownership rules, agentic-validation vocabulary, LLM-judge governance, and cross-layer fixtures.
-- Layer repos own layer-specific implementation and live handoff state.
-- External OSS/services are behind adapters and must not define canonical cross-layer types.
-- Keep layer implementations replaceable.
+These are cross-cutting platform requirements, not extra epistemic layers.
 
 ## Shared contract rules
-- Machine-readable schemas at boundaries.
-- Additive evolution by default; breaking changes require a major schema version.
-- Preserve historical records and provenance; do not silently rewrite past assessments.
-- Keep runtime/system failures distinct from epistemic failures and policy decisions.
-- Every important output must point back to exact upstream artifacts/assessments.
+- machine-readable schemas at boundaries
+- pre-release contract may evolve during `PRE_LOCK_AUDIT`; after lock/release, additive evolution by default and breaking changes require major version
+- historical records/provenance are preserved
+- system/dependency failures remain distinct from epistemic failures/policy decisions
+- external OSS/vendor types never become canonical cross-layer types
 
 ## Verification commands
 Current TypeScript baseline:
@@ -150,14 +174,13 @@ npm run build
 After a lockfile is verified and committed, prefer `npm ci` in CI.
 
 ## Continuity protocol
-`AGENTS.md` is the stable operating contract. Do not edit it mechanically every commit.
-
-`HANDOFF.md` is the live checkpoint. Update it whenever substantive work changes architecture, observable behavior, verification state, benchmark state, blockers, or next steps. Tiny formatting/comment-only changes do not require handoff churn.
+`AGENTS.md` is the stable operating contract. `HANDOFF.md` is live checkpoint state.
 
 Before ending substantive work:
-1. record commands/tests actually run and outcomes;
+1. record commands actually run and outcomes;
 2. update `HANDOFF.md` with verified vs unverified state;
-3. make the next step executable without conversation history;
-4. reference active issue(s) and relevant commits.
+3. update any applicable `SliceVerificationRecord` from observed evidence only;
+4. make the next action executable without conversation history;
+5. reference relevant issues/commits.
 
-See GitHub issue #4 for the continuity standard.
+Issue #4 is the continuity standard; issue #8 is the current plan-lock audit.
