@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import Ajv2020, { type AnySchema } from 'ajv/dist/2020.js';
+import type { AnySchema } from 'ajv';
+import Ajv2020 from 'ajv/dist/2020.js';
 import { describe, expect, it } from 'vitest';
 
 type Fixture = {
