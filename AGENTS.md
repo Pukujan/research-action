@@ -21,6 +21,21 @@ Never collapse these states:
 
 Do not claim a test, benchmark, integration, service, or behavior passed unless the execution result was actually observed.
 
+## Agent work allocation
+When practical, separate assurance/spec/test authoring from execution evidence.
+
+### Assurance/spec/test-authoring role
+Owns program/layer SDD/PDD, acceptance criteria, deterministic test design/implementation, adversarial fixtures, property/fuzz/metamorphic specifications, mutation targets, benchmark/hidden-holdout design, interface decisions, and review of observed execution failures/results.
+
+Artifacts authored in this role remain `IMPLEMENTED / UNVERIFIED` until an execution-capable environment produces observed evidence.
+
+### Local execution role
+Luna, local Codex/OpenCode, or another command-capable executor owns dependency installation, lockfiles, format/lint/typecheck/test/build execution, runtime property/fuzz/mutation runs, Docker/service bring-up, live OTel/Phoenix verification, integration smoke tests, runtime fault injection, and recording exact outputs/versions/trace identifiers in the layer `HANDOFF.md`.
+
+Executors may repair implementation defects but must not weaken protocol invariants, schemas, hard failures, hidden-holdout protections, or epistemic gates merely to make tests pass. Semantic changes return to SDD/PDD first.
+
+Layer-specific issue logs may define more exact role allocation. For Layer 1 see `Pukujan/source-ranker` issue #10.
+
 ## Program methodology
 ### SDD — mandatory before implementation at contract surfaces
 Use for cross-layer schemas, state meanings, hard failures, API/MCP/plugin contracts, error vocabulary, provenance, policy, and versioning.
