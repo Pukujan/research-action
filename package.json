@@ -1,0 +1,24 @@
+{
+  "name": "@research-action/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Canonical cross-layer contracts for Research → Action Verification",
+  "scripts": {
+    "format": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "ci": "npm run format && npm run lint && npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/node": "^22.13.10",
+    "ajv": "^8.17.1",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0",
+    "vitest": "^3.0.9"
+  }
+}
