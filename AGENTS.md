@@ -6,7 +6,7 @@ This repository is the canonical program/control-plane repository for the 9-laye
 Before changing behavior, read:
 1. `README.md`
 2. `HANDOFF.md`
-3. GitHub issues #1–#4
+3. GitHub issues #1–#6
 4. relevant schemas/tests
 
 Do not rely on prior chat/session memory when repo state and chat disagree. The repository and observed execution results are authoritative.
@@ -35,6 +35,18 @@ Luna, local Codex/OpenCode, or another command-capable executor owns dependency 
 Executors may repair implementation defects but must not weaken protocol invariants, schemas, hard failures, hidden-holdout protections, or epistemic gates merely to make tests pass. Semantic changes return to SDD/PDD first.
 
 Layer-specific issue logs may define more exact role allocation. For Layer 1 see `Pukujan/source-ranker` issue #10.
+
+## Policy ownership rule
+Policy boundaries are frozen early, not deferred until the final end-to-end pipeline.
+
+Core rule: **overlap is allowed for evidence/signals, shadow evaluation, diagnostics, and tests; consequential decision authority has exactly one canonical owner.**
+
+- A layer may preserve or recompute a neighboring signal for comparison, but the shadow output is non-authoritative.
+- A downstream layer must not silently re-decide or overwrite an upstream layer's canonical assessment.
+- Policy ownership changes require a recorded architectural decision, versioned contract transition, and compatibility tests.
+- Cross-layer tests must prove upstream hard failures and required review states cannot be bypassed downstream.
+
+Canonical ownership matrix is in issue #5.
 
 ## Program methodology
 ### SDD — mandatory before implementation at contract surfaces
@@ -70,6 +82,21 @@ Use W3C trace context. Record structured inputs/outputs, evidence refs, decision
 ### W3C PROV — canonical durable provenance semantics
 Use PROV-DM / PROV-O concepts for Entity, Activity, Agent and derivation/attribution relations. OTel is operational tracing; PROV is durable semantic provenance.
 
+### Agentic coding validation — risk-gated
+Issue #6 defines the shared coding-agent validation stack. Use as applicable:
+- independent hidden acceptance + regression (`FAIL_TO_PASS` / `PASS_TO_PASS`)
+- reproducible sandbox/configuration
+- differential/oracle testing
+- repeated-run reliability and uncertainty
+- trajectory/tamper validation
+- idempotency and state-machine/sequence tests
+- mutation testing of critical evaluators
+- security/adversarial checks
+- performance/resource regression checks
+- long-horizon reliability evaluation for autonomous coding workflows
+
+Layer 5 chooses the required assurance level for the risk/change class; Layer 8 verifies the plan/tests satisfy it; actual execution results remain evidence artifacts, not opinions.
+
 ### TLA+ — conditional
 Use for meaningful async/distributed state protocols, retries, queues, leases, stale completions, or multi-stage promotion. Do not use it to prove empirical ranking quality.
 
@@ -83,7 +110,7 @@ Dependency outages, timeouts, malformed outputs, retries, stale cache, DB confli
 Only after a real distributed production topology exists. Prefer deterministic fault injection first.
 
 ## Cross-layer architecture
-- This repo owns canonical contracts, methodology, provenance semantics, telemetry conventions, compatibility rules, and cross-layer fixtures.
+- This repo owns canonical contracts, methodology, provenance semantics, telemetry conventions, compatibility rules, policy vocabulary/ownership rules, agentic-validation vocabulary, and cross-layer fixtures.
 - Layer repos own layer-specific implementation and live handoff state.
 - External OSS/services are behind adapters and must not define canonical cross-layer types.
 - Keep layer implementations replaceable.
