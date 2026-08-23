@@ -15,6 +15,7 @@
     "epistemicState",
     "failures",
     "provenance",
+    "decisionContext",
     "policyVersion",
     "evaluatorVersion",
     "producedAt",
@@ -52,6 +53,7 @@
       "type": "array",
       "items": { "$ref": "#/$defs/provenanceLink" }
     },
+    "decisionContext": { "$ref": "#/$defs/decisionContext" },
     "policyVersion": { "type": "string", "minLength": 1 },
     "evaluatorVersion": { "type": "string", "minLength": 1 },
     "producedAt": {
@@ -68,6 +70,19 @@
       "properties": {
         "traceId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
         "spanId": { "type": "string", "pattern": "^[0-9a-f]{16}$" }
+      }
+    },
+    "decisionContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owningLayer", "scope", "policyId", "authority"],
+      "properties": {
+        "owningLayer": { "type": "integer", "minimum": 1, "maximum": 9 },
+        "scope": { "type": "string", "minLength": 1 },
+        "policyId": { "type": "string", "minLength": 1 },
+        "authority": {
+          "enum": ["AUTHORITATIVE", "SHADOW", "DIAGNOSTIC"]
+        }
       }
     },
     "provEntityRef": {
