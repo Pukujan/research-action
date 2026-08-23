@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "layerId": 1,
+  "runId": "run-fixture-001",
+  "trace": {
+    "traceId": "0123456789abcdef0123456789abcdef",
+    "spanId": "0123456789abcdef"
+  },
+  "provBundleId": "urn:research-action:bundle:run-fixture-001",
+  "subjectId": "urn:research-action:assessment:source:fixture-001",
+  "inputRefs": [
+    {
+      "id": "urn:research-action:claim:fixture-001",
+      "type": "Claim"
+    },
+    {
+      "id": "urn:research-action:source:fixture-001",
+      "type": "SourceArtifact",
+      "uri": "https://example.invalid/project/releases/v2.0.0"
+    }
+  ],
+  "epistemicState": "SUPPORTED",
+  "failures": [],
+  "provenance": [
+    {
+      "relation": "wasDerivedFrom",
+      "subjectId": "urn:research-action:assessment:source:fixture-001",
+      "objectId": "urn:research-action:claim:fixture-001"
+    },
+    {
+      "relation": "wasDerivedFrom",
+      "subjectId": "urn:research-action:assessment:source:fixture-001",
+      "objectId": "urn:research-action:source:fixture-001"
+    },
+    {
+      "relation": "wasGeneratedBy",
+      "subjectId": "urn:research-action:assessment:source:fixture-001",
+      "objectId": "urn:research-action:activity:layer1:fixture-001"
+    },
+    {
+      "relation": "used",
+      "subjectId": "urn:research-action:activity:layer1:fixture-001",
+      "objectId": "urn:research-action:source:fixture-001"
+    }
+  ],
+  "policyVersion": "layer1-policy/0.0.1",
+  "evaluatorVersion": "fixture-evaluator/0.0.1",
+  "producedAt": "2026-08-23T21:00:00Z",
+  "payload": {
+    "claimRef": {
+      "id": "urn:research-action:claim:fixture-001",
+      "type": "Claim"
+    },
+    "sourceRef": {
+      "id": "urn:research-action:source:fixture-001",
+      "type": "SourceArtifact",
+      "uri": "https://example.invalid/project/releases/v2.0.0"
+    },
+    "claimClass": "SOFTWARE_SPECIFICATION",
+    "intendedUse": {
+      "category": "dependency-upgrade-research",
+      "riskTier": "MEDIUM"
+    },
+    "sourceType": "OFFICIAL_RELEASE_NOTES",
+    "evidenceRootId": "urn:research-action:evidence-root:fixture-001",
+    "dimensions": {
+      "authorityToClaim": {
+        "state": "STRONG",
+        "reasons": ["Official release artifact for the software specification claim."],
+        "evidenceRefs": ["urn:research-action:source:fixture-001"]
+      },
+      "directness": {
+        "state": "STRONG",
+        "reasons": ["The source directly describes the released version."],
+        "evidenceRefs": ["urn:research-action:source:fixture-001"]
+      },
+      "methodology": {
+        "state": "NOT_APPLICABLE",
+        "reasons": ["The claim is a software specification rather than an empirical benchmark."],
+        "evidenceRefs": []
+      },
+      "reproducibility": {
+        "state": "NOT_APPLICABLE",
+        "reasons": ["Reproducibility is not required to establish this specification claim."],
+        "evidenceRefs": []
+      },
+      "temporalFit": {
+        "state": "ADEQUATE",
+        "reasons": ["The release artifact matches the intended research time window."],
+        "evidenceRefs": ["urn:research-action:source:fixture-001"]
+      },
+      "versionFit": {
+        "state": "STRONG",
+        "reasons": ["The source explicitly refers to version 2.0.0."],
+        "evidenceRefs": ["urn:research-action:source:fixture-001"]
+      },
+      "independence": {
+        "state": "ADEQUATE",
+        "reasons": ["This fixture represents one evidence root and makes no corroboration claim."],
+        "evidenceRefs": ["urn:research-action:evidence-root:fixture-001"]
+      },
+      "transparency": {
+        "state": "STRONG",
+        "reasons": ["Version and publisher are explicit."],
+        "evidenceRefs": ["urn:research-action:source:fixture-001"]
+      },
+      "conflictOfInterest": {
+        "state": "ADEQUATE",
+        "reasons": ["Vendor authorship is relevant but does not invalidate a first-party specification claim."],
+        "evidenceRefs": ["urn:research-action:source:fixture-001"]
+      }
+    },
+    "decision": "ACCEPT",
+    "sufficientFor": ["Establishing what the official version 2.0.0 release notes specify."],
+    "insufficientFor": ["Establishing independent production reliability or security."],
+    "summary": "Strong first-party evidence for the scoped software specification claim; not independent evidence of operational quality."
+  }
+}
