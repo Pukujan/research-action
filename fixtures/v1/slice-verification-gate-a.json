@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "sliceId": "gate-a-contract-foundation",
+  "sliceVersion": "0.1.0-pre-execution",
+  "gate": "A",
+  "mode": "observe",
+  "verificationState": "NOT_RUN",
+  "requiredValidationProfile": "A1",
+  "requirementRefs": [
+    "https://github.com/Pukujan/research-action/issues/1",
+    "https://github.com/Pukujan/research-action/issues/5",
+    "https://github.com/Pukujan/research-action/issues/8"
+  ],
+  "commitRefs": [],
+  "componentVersions": [
+    { "component": "@research-action/contracts", "version": "0.0.0-pre-verify" }
+  ],
+  "checks": [
+    {
+      "name": "format-lint-typecheck-test-build",
+      "kind": "ci-baseline",
+      "status": "NOT_RUN",
+      "summary": "Must be replaced with observed execution evidence before Gate A can be VERIFIED."
+    },
+    {
+      "name": "canonical-envelope-schema",
+      "kind": "contract",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "w3c-prov-derivation-invariant",
+      "kind": "contract",
+      "status": "NOT_RUN"
+    }
+  ],
+  "smokeScenarios": [],
+  "traceIds": [],
+  "provRefs": [],
+  "humanVerifications": [],
+  "knownGaps": [
+    "No command-capable environment has executed the current contract package yet.",
+    "No Gate B0 runtime/OTel/Phoenix evidence exists yet."
+  ],
+  "proves": [
+    "The project has a machine-readable shape for recording future slice verification evidence."
+  ],
+  "doesNotProve": [
+    "That Gate A tests/build pass.",
+    "That Layer 1 is task-matched or benchmarked.",
+    "That INITE Brain solves the complete Layer 1 source-suitability task."
+  ],
+  "producedAt": "2026-08-23T23:15:00Z"
+}
