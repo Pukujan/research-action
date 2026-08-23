@@ -4,12 +4,25 @@
   "private": true,
   "type": "module",
   "description": "Canonical cross-layer contracts for Research → Action Verification",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schemas/*": "./schemas/*",
+    "./fixtures/*": "./fixtures/*"
+  },
+  "files": ["dist", "schemas", "fixtures"],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "format": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "ci": "npm run format && npm run lint && npm run typecheck && npm run test"
+    "ci": "npm run format && npm run lint && npm run typecheck && npm run test && npm run build",
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
