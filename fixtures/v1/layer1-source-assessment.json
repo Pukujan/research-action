@@ -43,6 +43,12 @@
       "objectId": "urn:research-action:source:fixture-001"
     }
   ],
+  "decisionContext": {
+    "owningLayer": 1,
+    "scope": "source-suitability",
+    "policyId": "layer1-source-suitability",
+    "authority": "AUTHORITATIVE"
+  },
   "policyVersion": "layer1-policy/0.0.1",
   "evaluatorVersion": "fixture-evaluator/0.0.1",
   "producedAt": "2026-08-23T21:00:00Z",
