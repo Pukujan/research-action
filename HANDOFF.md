@@ -4,118 +4,105 @@
 - Date: 2026-08-23
 - Repository: `Pukujan/research-action`
 - Branch: `main`
-- Current program gate: **Gate A — contract foundation**
-- Current epistemic state: **IMPLEMENTED / POLICY OWNERSHIP + VALIDATION METHOD EXPANDED / NOT YET EXECUTION-VERIFIED**
+- Plan status: **PRE_LOCK_AUDIT — design corrections substantially complete, not yet LOCKED_V1**
+- Current delivery gate: **Gate A — implemented / NOT execution-verified**
 
-## What exists
-- Canonical 9-layer program plan and methodology in issues #1–#6.
-- Canonical `AssuranceEnvelope<T>` and shared epistemic/failure vocabularies.
-- W3C PROV-compatible provenance references and relation vocabulary.
-- W3C trace-context / OTel semantic conventions.
-- Layer 1 `SourceAssessment` contract/schema.
-- Canonical fixture and initial schema/provenance contract tests.
-- Strict TypeScript / ESLint / Prettier / Vitest scaffolding.
-- CI workflow scaffold.
-- Stable agent work-allocation rule in `AGENTS.md`.
-- Canonical non-overlapping policy ownership matrix in issue #5.
-- Program-wide agentic coding validation standard in issue #6.
+## Current canonical issues
+- #1 shared contracts / SWE / adapters / verification record
+- #2 program plan and Gate A/B0/B1/B2/C/D/E/F sequence
+- #3 W3C PROV
+- #4 session continuity
+- #5 policy ownership + assurance DAG
+- #6 agentic coding validation A1–A5
+- #7 LLM-as-judge governance
+- #8 adversarial pre-lock audit / scope control
 
-## New architecture decisions
-### Policy ownership
-Issue #5 is canonical.
+## Adversarial audit result
+The audit found real contradictions and reduced scope rather than adding a universal validation checklist.
 
-Rule: **overlap is allowed for evidence/signals/shadow evaluation/diagnostics; consequential decision authority has exactly one canonical owning layer.**
+Resolved/high-priority findings:
+- L1 source suitability vs L2 exact grounding failure ownership separated.
+- L6 is the final action gate over an assurance DAG, not a fixed linear step before L7/L8.
+- first live host work split into B0 runtime, B1 one client, B2 second-client portability.
+- OpenCode automatic interception is version/capability-probe dependent; explicit assured MCP/tool path is fallback.
+- hidden holdout requires grader custody outside normal implementation-agent access.
+- `ABSTAIN` does not automatically mean human review.
+- `source-ranker` shared-foundation issue is conformance-only.
+- A1–A5 is the only validation-profile taxonomy; advanced validation is failure/risk triggered.
+- Layer-7 candidate disposition is distinct from portfolio `GREENFIELD_REQUIRED` conclusion.
+- operational pre-enforcement requirements now include auth/least privilege, trace/provenance redaction/retention, and assessment freshness/revalidation.
 
-Do not defer semantic ownership until the final E2E build. Boundaries are specified now; enforcement and cross-layer non-bypass tests become executable as the E2E slice appears.
+Canonical audit: issue #8.
 
-Layer summary:
-- L1 source suitability
-- L2 exact artifact/evidence grounding
-- L3 semantic claim support
-- L4 trusted-knowledge ingestion eligibility/integrity
-- L5 risk-tier and required-assurance policy
-- L6 research-to-action release gate
-- L7 build-vs-reuse decision
-- L8 evidence sufficiency of plans/methods/tests
-- L9 provenance/assurance-chain completeness
+## Shared contract changes — IMPLEMENTED / UNVERIFIED
+Latest contract implementation sequence includes:
+- `DecisionContext` on every `AssuranceEnvelope<T>`:
+  - `owningLayer`
+  - `scope`
+  - `policyId`
+  - `authority: AUTHORITATIVE | SHADOW | DIAGNOSTIC`
+- JSON Schema requires that context.
+- canonical Layer-1 fixture now identifies its decision as authoritative Layer-1 `source-suitability`.
+- new `SliceVerificationRecord` type/schema.
+- pre-execution Gate-A fixture deliberately says `NOT_RUN` and lists what it does **not** prove.
+- contract tests now test decision identity and that the pre-execution record cannot masquerade as verified.
 
-Layer 9 is cross-cutting but does not re-decide Layers 1–8.
+Important shared contract commit consumed by Layer 1:
+- `67af56a17f1616e289e4e709facdec3098280b97` — contract tests + audited decision/verification schema state used by `source-ranker`.
 
-### Agentic coding validation
-Issue #6 extends the methodology with:
-- independent hidden acceptance + regression (`FAIL_TO_PASS` / `PASS_TO_PASS`)
-- reproducible sandbox/configuration
-- differential/oracle testing
-- repeated-run reliability / uncertainty / cost and latency
-- trajectory/tamper validation
-- idempotency testing
-- executable state-machine/sequence testing
-- evaluator mutation testing
-- security/adversarial validation
-- performance/resource regression checks
-- long-horizon reliability evaluation when relevant
+Later documentation commits do not change that pinned runtime contract unless explicitly advanced and tested.
 
-Suggested internal assurance levels are A1 Development through A5 Critical. Layer 5 chooses the required level by risk; Layer 8 verifies the proposed verification plan satisfies it; actual execution results remain evidence artifacts; Layer 6 consumes them for action/deployment gating; Layer 9 preserves provenance.
+## Current verification state
+### Implemented/observed in Git
+- issues/specs updated
+- shared decision identity committed
+- slice verification type/schema/fixture committed
+- canonical fixture/tests updated
 
-## Methodology status
-- SDD/PDD: active now for contracts, policy semantics, state transitions and ownership boundaries.
-- TDD: active now for deterministic code.
-- hidden acceptance/regression: required for consequential behavior-changing coding tasks where feasible.
-- property/fuzz/metamorphic: required as corresponding modules become executable.
-- differential: use when a trusted oracle/reference exists.
-- repeated-run reliability: for agent/model-dependent empirical evaluation, not every deterministic CI test.
-- mutation: critical product gates and critical evaluators/tests.
-- trajectory/tamper validation: protect tests, schemas, policies and hidden holdouts in agentic coding workflows.
-- idempotency/state-machine testing: for side-effecting/stateful workflows before relying only on formal methods.
-- hidden holdouts: empirical/LLM/IR release evaluation.
-- IR metrics: retrieval layers independently from verification.
-- HITL: benchmark adjudication and risk/uncertainty escalations.
-- OTel: first executable slice onward.
-- W3C PROV: durable cross-layer provenance.
-- TLA+: only when distributed/asynchronous protocol complexity justifies it.
-- Lean 4: only if a small pure formal calculus becomes valuable.
-- fault injection: before enforcement/production.
-- full chaos: only after meaningful distributed deployment exists.
-
-## Verified vs unverified
-### Observed/implemented
-- Files/contracts/issues are committed to GitHub.
-- Policy ownership and expanded validation methodology are documented.
-
-### NOT YET VERIFIED
-No local/inspectable execution result has yet proven that the current program package passes:
+### NOT execution-verified
+No command-capable run has yet proven current `research-action` passes:
+- install/lockfile resolution
 - formatting
 - lint
 - strict TypeScript
-- schema tests
-- provenance tests
+- schema/contract tests
 - build
 
-Do not promote Gate A to VERIFIED until these are actually run and observed.
+Do not promote Gate A or the pre-execution slice record to `VERIFIED` until those results are observed.
 
-## Active issues
-- #1 Shared contracts / CI / telemetry / adapters
-- #2 9-layer plan + methodology
-- #3 W3C PROV canonical model
-- #4 agent/session continuity protocol
-- #5 policy ownership matrix / non-overlapping decision authority
-- #6 agentic coding validation standard
+## Exact next work for Luna/local executor
+1. Read `AGENTS.md`, this file, issues #1–#8, and `source-ranker/LOCAL-CODEX-HANDOFF.md`.
+2. Execute Gate A:
+   ```bash
+   npm install
+   npx prettier --write .
+   npm run lint
+   npm run typecheck
+   npm run test
+   npm run build
+   ```
+3. Fix only observed implementation/tooling defects. Semantic changes return to SDD/PDD and issue #8.
+4. Commit/inspect `package-lock.json`; only then move CI to `npm ci`/cache.
+5. Update `fixtures/v1/slice-verification-gate-a.json` (or create an observed successor record) with exact execution evidence; never overwrite `NOT_RUN` with `VERIFIED` without actual evidence refs/results.
+6. Verify `source-ranker` against exact contracts commit and its current tests.
+7. Only after both repos are green, execute B0: real Brain-backed assessment -> OTel/Phoenix, positive + failure/abstain, human-inspectable.
+8. After B0, choose exactly one B1 client. A second client is B2, not a prerequisite for B1.
 
-## Exact next steps
-1. Luna/local executor verifies `research-action` and `source-ranker` using their handoffs.
-2. Fix only observed failures; semantic changes return to SDD/PDD.
-3. Commit verified lockfiles and switch CI to `npm ci` only after successful execution.
-4. Run the first real INITE Brain → SourceAssessment → OTel/Phoenix slice.
-5. Add OpenCode observe-mode and inspect one real research query.
-6. As cross-layer mocks/implementations appear, add tests proving downstream layers cannot bypass upstream hard-failure/review states and that each policy decision reports its canonical owning layer.
+## Plan-lock criteria still to close
+Before marking `LOCKED_V1`:
+- read back machine-readable decision context + SliceVerificationRecord for static consistency;
+- ensure source/local handoffs use post-audit sequence and current test count;
+- ensure operational safety/freshness has an assigned pre-enforcement owner (currently shared platform/L5/L6 as specified in issues #1/#2/#8);
+- then update issue #2 status to `LOCKED_V1` and record the lock decision/version.
 
-## Do not repeat / avoid
-- Do not invent a parallel provenance model instead of W3C PROV.
-- Do not make multiple layers authoritative for the same policy question.
-- Do not prohibit useful diagnostic/shadow overlap; mark it non-authoritative instead.
-- Do not let implementation-specific Brain/OpenCode/ChatGPT types enter canonical contracts.
-- Do not treat agent-authored tests as the sole independent oracle for consequential changes.
-- Do not claim tests/benchmarks/integrations passed without observed execution.
+Actual B0/B1 runtime execution is **not** required to lock the architecture design; those gates become verified only through their later observed verification records.
 
-## New-agent handoff
-Start by reading `AGENTS.md`, this file, and issues #1–#6. Current priority remains execution verification, then the observable Layer 1 vertical slice. Policy ownership is already specified and should not be postponed until the final E2E implementation.
+## Do not repeat
+- do not reintroduce a second validation ladder;
+- do not make every advanced validation method mandatory everywhere;
+- do not conflate L1 source applicability with L2 citation/span existence;
+- do not force ChatGPT + OpenCode + Codex into the first client milestone;
+- do not assume OpenCode hook names/coverage without a capability probe;
+- do not treat visible agent-authored tests as a protected hidden oracle;
+- do not add a DB for slice verification records yet;
+- do not claim Brain solves complete Layer 1 or that any current test suite passed before execution.
