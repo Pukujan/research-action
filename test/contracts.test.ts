@@ -114,6 +114,20 @@ describe("Gate A contracts", () => {
     );
   });
 
+  it("validates the executed B0 slice verification fixture", () => {
+    const b0Fixture = readJson<SliceFixture & { traceIds: string[] }>(
+      "fixtures/v1/slice-verification-b0-executed.json",
+    );
+    const validate = ajv.compile(sliceVerificationSchema);
+    expect(validate(b0Fixture), JSON.stringify(validate.errors)).toBe(true);
+    expect(b0Fixture.verificationState).toBe("PARTIAL");
+    expect(b0Fixture.checks.every((check) => check.status === "PASS")).toBe(
+      true,
+    );
+    expect(b0Fixture.traceIds.length).toBeGreaterThan(0);
+    expect(b0Fixture.doesNotProve.length).toBeGreaterThan(0);
+  });
+
   it("keeps the executed fixture's VERIFIED claim backed by commit refs and passing checks", () => {
     expect(executedFixture.verificationState).toBe("VERIFIED");
     expect(executedFixture.requiredValidationProfile).toBe("A1");
