@@ -31,6 +31,8 @@ type SliceFixture = {
 
 type ExecutedSliceFixture = SliceFixture & {
   commitRefs: string[];
+  requiredValidationProfile: string;
+  achievedValidationProfile: string;
 };
 
 function readJson<T>(path: string): T {
@@ -113,12 +115,13 @@ describe("Gate A contracts", () => {
   });
 
   it("keeps the executed fixture's VERIFIED claim backed by commit refs and passing checks", () => {
-    if (executedFixture.verificationState === "VERIFIED") {
-      expect(executedFixture.commitRefs.length).toBeGreaterThan(0);
-      expect(
-        executedFixture.checks.every((check) => check.status === "PASS"),
-      ).toBe(true);
-    }
+    expect(executedFixture.verificationState).toBe("VERIFIED");
+    expect(executedFixture.requiredValidationProfile).toBe("A1");
+    expect(executedFixture.achievedValidationProfile).toBe("A1");
+    expect(executedFixture.commitRefs.length).toBeGreaterThan(0);
+    expect(
+      executedFixture.checks.every((check) => check.status === "PASS"),
+    ).toBe(true);
     expect(executedFixture.doesNotProve.length).toBeGreaterThan(0);
   });
 });

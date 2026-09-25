@@ -1,11 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "sliceId": "gate-a-contract-foundation-executed",
+  "sliceId": "gate-a-contract-foundation",
   "sliceVersion": "0.1.0-executed",
   "gate": "A",
   "mode": "observe",
   "verificationState": "VERIFIED",
   "requiredValidationProfile": "A1",
+  "achievedValidationProfile": "A1",
   "requirementRefs": [
     "https://github.com/Pukujan/research-action/issues/1",
     "https://github.com/Pukujan/research-action/issues/5",
