@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0.0",
+  "sliceId": "gate-a-contract-foundation-executed",
+  "sliceVersion": "0.1.0-executed",
+  "gate": "A",
+  "mode": "observe",
+  "verificationState": "VERIFIED",
+  "requiredValidationProfile": "A1",
+  "requirementRefs": [
+    "https://github.com/Pukujan/research-action/issues/1",
+    "https://github.com/Pukujan/research-action/issues/5",
+    "https://github.com/Pukujan/research-action/issues/8"
+  ],
+  "commitRefs": [
+    "5d3f032aebf61c0a563c4121499e0086a0a3df7e",
+    "c6f7e43fda64ce9053514064de53152f9ffac8bc"
+  ],
+  "componentVersions": [
+    { "component": "@research-action/contracts", "version": "0.0.0" }
+  ],
+  "environmentFingerprint": "CI: node v22.23.2 (actions/setup-node, run 36098185235; runner npm version not logged). Local confirmation: node v24.13.0, npm 11.6.2, darwin arm64.",
+  "checks": [
+    {
+      "name": "format-lint-typecheck-test",
+      "kind": "ci-baseline",
+      "status": "PASS",
+      "evidenceRef": "https://github.com/Pukujan/research-action/actions/runs/36098185235",
+      "summary": "Observed 2026-09-25: npm run ci green on main at 5d3f032a (steps setup-node/npm install/npm run ci success)."
+    },
+    {
+      "name": "build",
+      "kind": "ci-baseline",
+      "status": "PASS",
+      "evidenceRef": "https://github.com/Pukujan/research-action/actions/runs/36098185235",
+      "summary": "Observed in the same run: prepare hook (tsc -p tsconfig.build.json) during npm install, and npm run ci's build stage. Also confirmed green locally against the identical committed tree on node v24.13.0."
+    },
+    {
+      "name": "canonical-envelope-schema",
+      "kind": "contract",
+      "status": "PASS",
+      "evidenceRef": "https://github.com/Pukujan/research-action/actions/runs/36098185235",
+      "summary": "test/contracts.test.ts ran within the npm run ci test step of the observed run."
+    },
+    {
+      "name": "w3c-prov-derivation-invariant",
+      "kind": "contract",
+      "status": "PASS",
+      "evidenceRef": "https://github.com/Pukujan/research-action/actions/runs/36098185235",
+      "summary": "Derivation-path invariant test ran within the npm run ci test step of the observed run."
+    }
+  ],
+  "smokeScenarios": [],
+  "traceIds": [],
+  "provRefs": [],
+  "humanVerifications": [],
+  "knownGaps": [
+    "This record was authored after the fact from recorded CI evidence; it does not re-execute Gate A.",
+    "The runner npm version was not logged in Actions run 36098185235; only node v22.23.2 is captured from setup-node output.",
+    "No Gate B0 runtime/OTel/Phoenix evidence exists yet."
+  ],
+  "proves": [
+    "The Gate A commands (format, lint, typecheck, test, build) were observed green in CI against this repository's main at 5d3f032aebf61c0a563c4121499e0086a0a3df7e.",
+    "The canonical envelope and W3C PROV derivation invariant contract tests ran in that observed execution."
+  ],
+  "doesNotProve": [
+    "That Layer 1 is task-matched or benchmarked.",
+    "That INITE Brain solves the complete Layer 1 source-suitability task.",
+    "That any runtime trace reaches an observability backend (B0)."
+  ],
+  "producedAt": "2026-09-25T05:55:00Z"
+}
