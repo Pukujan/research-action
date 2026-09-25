@@ -14,7 +14,11 @@
     "./schemas/*": "./schemas/*",
     "./fixtures/*": "./fixtures/*"
   },
-  "files": ["dist", "schemas", "fixtures"],
+  "files": [
+    "dist",
+    "schemas",
+    "fixtures"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --check .",

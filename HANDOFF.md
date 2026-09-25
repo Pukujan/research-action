@@ -1,6 +1,7 @@
 # HANDOFF.md — Research → Action Verification
 
 ## Checkpoint
+
 - Date: 2026-08-23
 - Repository: `Pukujan/research-action`
 - Branch: `main`
@@ -11,6 +12,7 @@
 `LOCKED_V1` locks the architecture/methodology plan only. It does **not** verify Gate A, INITE Brain, Layer 1, any client integration, or epistemic quality.
 
 ## Current canonical issues
+
 - #1 shared contracts / SWE / adapters / operational trust/freshness ownership
 - #2 LOCKED_V1 program plan and Gate A/B0/B1/B2/C/D/E/F sequence
 - #3 W3C PROV
@@ -21,7 +23,9 @@
 - #8 completed adversarial audit / scope control
 
 ## What the adversarial audit changed
+
 The audit reduced scope and corrected contradictions rather than adding a universal validation checklist:
+
 - L1 source suitability vs L2 exact grounding ownership separated.
 - L6 is final action gate over a typed assurance DAG; L7/L8 may feed it.
 - host milestones split B0 runtime / B1 one client / B2 second-client portability.
@@ -35,7 +39,9 @@ The audit reduced scope and corrected contradictions rather than adding a univer
 - same-agent visible tests are development evidence, not independent hidden acceptance.
 
 ## Shared contract state — IMPLEMENTED / UNVERIFIED
+
 The current pre-release contract includes:
+
 - `DecisionContext` on every assurance envelope:
   - `owningLayer`
   - `scope`
@@ -48,12 +54,15 @@ The current pre-release contract includes:
 - contract tests for decision identity and verification-record anti-self-certification.
 
 Exact shared contract revision currently consumed by `source-ranker`:
+
 - `67af56a17f1616e289e4e709facdec3098280b97`
 
 Later documentation commits do not change that pinned runtime contract unless explicitly advanced and tested.
 
 ## Verification state
+
 ### Observed/implemented in Git
+
 - architecture issues/specs audited and locked
 - decision identity committed
 - slice-verification type/schema/fixture committed
@@ -61,7 +70,9 @@ Later documentation commits do not change that pinned runtime contract unless ex
 - layer/client handoff sequence updated
 
 ### NOT execution-verified
+
 No command-capable run has yet established current `research-action` passes:
+
 - dependency install/lockfile resolution
 - formatting
 - lint
@@ -72,6 +83,7 @@ No command-capable run has yet established current `research-action` passes:
 Gate A remains **IMPLEMENTED / NOT VERIFIED**.
 
 ## Exact next work for Luna/local executor
+
 1. Read `AGENTS.md`, this file, issues #1–#8, and `source-ranker/LOCAL-CODEX-HANDOFF.md`.
 2. Execute Gate A:
    ```bash
@@ -90,7 +102,9 @@ Gate A remains **IMPLEMENTED / NOT VERIFIED**.
 8. After B0, choose exactly one B1 client. B2 second-client portability is later.
 
 ## Change control after LOCKED_V1
+
 Architecture/methodology changes must:
+
 1. name the failure/evidence motivating the change;
 2. identify affected owner/layer/contracts;
 3. update SDD/PDD acceptance criteria;
@@ -101,6 +115,7 @@ Architecture/methodology changes must:
 Implementation details inside an already-owned boundary do not require a new architecture-plan version unless they change externally observable semantics.
 
 ## Do not repeat
+
 - no second validation ladder
 - no universal advanced-test checklist
 - no L1/L2 grounding ownership collapse

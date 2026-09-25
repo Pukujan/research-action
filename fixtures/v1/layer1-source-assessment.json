@@ -72,7 +72,9 @@
     "dimensions": {
       "authorityToClaim": {
         "state": "STRONG",
-        "reasons": ["Official release artifact for the software specification claim."],
+        "reasons": [
+          "Official release artifact for the software specification claim."
+        ],
         "evidenceRefs": ["urn:research-action:source:fixture-001"]
       },
       "directness": {
@@ -82,17 +84,23 @@
       },
       "methodology": {
         "state": "NOT_APPLICABLE",
-        "reasons": ["The claim is a software specification rather than an empirical benchmark."],
+        "reasons": [
+          "The claim is a software specification rather than an empirical benchmark."
+        ],
         "evidenceRefs": []
       },
       "reproducibility": {
         "state": "NOT_APPLICABLE",
-        "reasons": ["Reproducibility is not required to establish this specification claim."],
+        "reasons": [
+          "Reproducibility is not required to establish this specification claim."
+        ],
         "evidenceRefs": []
       },
       "temporalFit": {
         "state": "ADEQUATE",
-        "reasons": ["The release artifact matches the intended research time window."],
+        "reasons": [
+          "The release artifact matches the intended research time window."
+        ],
         "evidenceRefs": ["urn:research-action:source:fixture-001"]
       },
       "versionFit": {
@@ -102,7 +110,9 @@
       },
       "independence": {
         "state": "ADEQUATE",
-        "reasons": ["This fixture represents one evidence root and makes no corroboration claim."],
+        "reasons": [
+          "This fixture represents one evidence root and makes no corroboration claim."
+        ],
         "evidenceRefs": ["urn:research-action:evidence-root:fixture-001"]
       },
       "transparency": {
@@ -112,13 +122,19 @@
       },
       "conflictOfInterest": {
         "state": "ADEQUATE",
-        "reasons": ["Vendor authorship is relevant but does not invalidate a first-party specification claim."],
+        "reasons": [
+          "Vendor authorship is relevant but does not invalidate a first-party specification claim."
+        ],
         "evidenceRefs": ["urn:research-action:source:fixture-001"]
       }
     },
     "decision": "ACCEPT",
-    "sufficientFor": ["Establishing what the official version 2.0.0 release notes specify."],
-    "insufficientFor": ["Establishing independent production reliability or security."],
+    "sufficientFor": [
+      "Establishing what the official version 2.0.0 release notes specify."
+    ],
+    "insufficientFor": [
+      "Establishing independent production reliability or security."
+    ],
     "summary": "Strong first-party evidence for the scoped software specification claim; not independent evidence of operational quality."
   }
 }

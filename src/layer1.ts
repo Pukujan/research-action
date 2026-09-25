@@ -1,33 +1,33 @@
-import type { ProvEntityRef } from './contracts.js';
+import type { ProvEntityRef } from "./contracts.js";
 
 export const SOURCE_DECISIONS = [
-  'ACCEPT',
-  'WARN',
-  'ABSTAIN',
-  'REJECT',
-  'HUMAN_REVIEW'
+  "ACCEPT",
+  "WARN",
+  "ABSTAIN",
+  "REJECT",
+  "HUMAN_REVIEW",
 ] as const;
 export type SourceDecision = (typeof SOURCE_DECISIONS)[number];
 
 export const DIMENSION_STATES = [
-  'STRONG',
-  'ADEQUATE',
-  'WEAK',
-  'UNKNOWN',
-  'NOT_APPLICABLE'
+  "STRONG",
+  "ADEQUATE",
+  "WEAK",
+  "UNKNOWN",
+  "NOT_APPLICABLE",
 ] as const;
 export type DimensionState = (typeof DIMENSION_STATES)[number];
 
 export const CLAIM_CLASSES = [
-  'SOFTWARE_SPECIFICATION',
-  'SOFTWARE_RUNTIME_BEHAVIOR',
-  'SECURITY_CLAIM',
-  'PRODUCT_TECHNOLOGY_COMPARISON',
-  'OTHER'
+  "SOFTWARE_SPECIFICATION",
+  "SOFTWARE_RUNTIME_BEHAVIOR",
+  "SECURITY_CLAIM",
+  "PRODUCT_TECHNOLOGY_COMPARISON",
+  "OTHER",
 ] as const;
 export type ClaimClass = (typeof CLAIM_CLASSES)[number];
 
-export const RISK_TIERS = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as const;
+export const RISK_TIERS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 export type RiskTier = (typeof RISK_TIERS)[number];
 
 export interface IntendedUse {

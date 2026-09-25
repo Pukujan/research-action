@@ -1,21 +1,35 @@
-export const DELIVERY_GATES = ['A', 'B0', 'B1', 'B2', 'C', 'D', 'E', 'F'] as const;
+export const DELIVERY_GATES = [
+  "A",
+  "B0",
+  "B1",
+  "B2",
+  "C",
+  "D",
+  "E",
+  "F",
+] as const;
 export type DeliveryGate = (typeof DELIVERY_GATES)[number];
 
-export const RUNTIME_MODES = ['observe', 'warn', 'enforce'] as const;
+export const RUNTIME_MODES = ["observe", "warn", "enforce"] as const;
 export type RuntimeMode = (typeof RUNTIME_MODES)[number];
 
-export const VALIDATION_PROFILES = ['A1', 'A2', 'A3', 'A4', 'A5'] as const;
+export const VALIDATION_PROFILES = ["A1", "A2", "A3", "A4", "A5"] as const;
 export type ValidationProfile = (typeof VALIDATION_PROFILES)[number];
 
 export const VERIFICATION_STATES = [
-  'NOT_RUN',
-  'PARTIAL',
-  'VERIFIED',
-  'FAILED'
+  "NOT_RUN",
+  "PARTIAL",
+  "VERIFIED",
+  "FAILED",
 ] as const;
 export type VerificationState = (typeof VERIFICATION_STATES)[number];
 
-export const CHECK_STATUSES = ['PASS', 'FAIL', 'NOT_RUN', 'NOT_APPLICABLE'] as const;
+export const CHECK_STATUSES = [
+  "PASS",
+  "FAIL",
+  "NOT_RUN",
+  "NOT_APPLICABLE",
+] as const;
 export type CheckStatus = (typeof CHECK_STATUSES)[number];
 
 export interface VerificationCheck {
@@ -41,7 +55,7 @@ export interface ComponentVersion {
 
 export interface HumanVerificationRef {
   readonly reviewerId?: string;
-  readonly verdict: 'EXPECTED' | 'INCORRECT' | 'UNCLEAR';
+  readonly verdict: "EXPECTED" | "INCORRECT" | "UNCLEAR";
   readonly evidenceRef?: string;
   readonly notes?: string;
 }
@@ -51,7 +65,7 @@ export interface HumanVerificationRef {
  * This is not a research epistemic state and does not replace AssuranceEnvelope.
  */
 export interface SliceVerificationRecord {
-  readonly schemaVersion: '1.0.0';
+  readonly schemaVersion: "1.0.0";
   readonly sliceId: string;
   readonly sliceVersion: string;
   readonly gate: DeliveryGate;

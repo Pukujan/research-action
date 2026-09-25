@@ -30,31 +30,57 @@
     "sliceVersion": { "type": "string", "minLength": 1 },
     "gate": { "enum": ["A", "B0", "B1", "B2", "C", "D", "E", "F"] },
     "mode": { "enum": ["observe", "warn", "enforce"] },
-    "verificationState": { "enum": ["NOT_RUN", "PARTIAL", "VERIFIED", "FAILED"] },
+    "verificationState": {
+      "enum": ["NOT_RUN", "PARTIAL", "VERIFIED", "FAILED"]
+    },
     "requiredValidationProfile": { "enum": ["A1", "A2", "A3", "A4", "A5"] },
     "achievedValidationProfile": { "enum": ["A1", "A2", "A3", "A4", "A5"] },
-    "requirementRefs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "commitRefs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "requirementRefs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "commitRefs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
     "componentVersions": {
       "type": "array",
       "items": { "$ref": "#/$defs/componentVersion" }
     },
     "environmentFingerprint": { "type": "string", "minLength": 1 },
     "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
-    "smokeScenarios": { "type": "array", "items": { "$ref": "#/$defs/smokeScenario" } },
+    "smokeScenarios": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/smokeScenario" }
+    },
     "traceIds": {
       "type": "array",
       "items": { "type": "string", "pattern": "^[0-9a-f]{32}$" }
     },
-    "provRefs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "provRefs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
     "humanVerifications": {
       "type": "array",
       "items": { "$ref": "#/$defs/humanVerification" }
     },
-    "knownGaps": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "proves": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "doesNotProve": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "producedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" }
+    "knownGaps": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "proves": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "doesNotProve": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "producedAt": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T"
+    }
   },
   "$defs": {
     "status": { "enum": ["PASS", "FAIL", "NOT_RUN", "NOT_APPLICABLE"] },

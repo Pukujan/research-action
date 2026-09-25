@@ -1,6 +1,6 @@
-import type { ProvRelation } from './contracts.js';
+import type { ProvRelation } from "./contracts.js";
 
-export const PROV_NAMESPACE = 'http://www.w3.org/ns/prov#';
+export const PROV_NAMESPACE = "http://www.w3.org/ns/prov#";
 
 export const PROV_O_RELATION_IRI = {
   used: `${PROV_NAMESPACE}used`,
@@ -12,10 +12,13 @@ export const PROV_O_RELATION_IRI = {
   wasQuotedFrom: `${PROV_NAMESPACE}wasQuotedFrom`,
   wasRevisionOf: `${PROV_NAMESPACE}wasRevisionOf`,
   alternateOf: `${PROV_NAMESPACE}alternateOf`,
-  specializationOf: `${PROV_NAMESPACE}specializationOf`
+  specializationOf: `${PROV_NAMESPACE}specializationOf`,
 } satisfies Readonly<Record<ProvRelation, string>>;
 
-export function researchActionUrn(kind: string, ...parts: readonly string[]): string {
-  const encoded = parts.map((part) => encodeURIComponent(part)).join(':');
+export function researchActionUrn(
+  kind: string,
+  ...parts: readonly string[]
+): string {
+  const encoded = parts.map((part) => encodeURIComponent(part)).join(":");
   return `urn:research-action:${kind}:${encoded}`;
 }
