@@ -67,7 +67,9 @@
         "conflictOfInterest": { "$ref": "#/$defs/dimension" }
       }
     },
-    "decision": { "enum": ["ACCEPT", "WARN", "ABSTAIN", "REJECT", "HUMAN_REVIEW"] },
+    "decision": {
+      "enum": ["ACCEPT", "WARN", "ABSTAIN", "REJECT", "HUMAN_REVIEW"]
+    },
     "sufficientFor": { "type": "array", "items": { "type": "string" } },
     "insufficientFor": { "type": "array", "items": { "type": "string" } },
     "summary": { "type": "string", "minLength": 1 }
@@ -90,7 +92,9 @@
       "additionalProperties": false,
       "required": ["state", "reasons", "evidenceRefs"],
       "properties": {
-        "state": { "enum": ["STRONG", "ADEQUATE", "WEAK", "UNKNOWN", "NOT_APPLICABLE"] },
+        "state": {
+          "enum": ["STRONG", "ADEQUATE", "WEAK", "UNKNOWN", "NOT_APPLICABLE"]
+        },
         "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
         "reasons": { "type": "array", "items": { "type": "string" } },
         "evidenceRefs": { "type": "array", "items": { "type": "string" } }

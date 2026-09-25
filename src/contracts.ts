@@ -2,33 +2,33 @@ export const LAYER_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 export type LayerId = (typeof LAYER_IDS)[number];
 
 export const EPISTEMIC_STATES = [
-  'UNASSESSED',
-  'IN_PROGRESS',
-  'SUPPORTED',
-  'CONTESTED',
-  'INSUFFICIENT_EVIDENCE',
-  'HARD_FAILED',
-  'HUMAN_REVIEW_REQUIRED',
-  'HUMAN_VERIFIED',
-  'SUPERSEDED'
+  "UNASSESSED",
+  "IN_PROGRESS",
+  "SUPPORTED",
+  "CONTESTED",
+  "INSUFFICIENT_EVIDENCE",
+  "HARD_FAILED",
+  "HUMAN_REVIEW_REQUIRED",
+  "HUMAN_VERIFIED",
+  "SUPERSEDED",
 ] as const;
 export type EpistemicState = (typeof EPISTEMIC_STATES)[number];
 
 export const FAILURE_CLASSES = [
-  'TRANSPORT_ERROR',
-  'DEPENDENCY_UNAVAILABLE',
-  'MALFORMED_INPUT',
-  'MALFORMED_EVALUATOR_OUTPUT',
-  'POLICY_REJECTED',
-  'EPISTEMIC_ABSTENTION',
-  'EVIDENCE_HARD_FAILURE'
+  "TRANSPORT_ERROR",
+  "DEPENDENCY_UNAVAILABLE",
+  "MALFORMED_INPUT",
+  "MALFORMED_EVALUATOR_OUTPUT",
+  "POLICY_REJECTED",
+  "EPISTEMIC_ABSTENTION",
+  "EVIDENCE_HARD_FAILURE",
 ] as const;
 export type FailureClass = (typeof FAILURE_CLASSES)[number];
 
 export const DECISION_AUTHORITIES = [
-  'AUTHORITATIVE',
-  'SHADOW',
-  'DIAGNOSTIC'
+  "AUTHORITATIVE",
+  "SHADOW",
+  "DIAGNOSTIC",
 ] as const;
 export type DecisionAuthority = (typeof DECISION_AUTHORITIES)[number];
 
@@ -69,21 +69,21 @@ export interface ProvActivityRef {
 export interface ProvAgentRef {
   /** Stable URI/URN identifying a W3C PROV Agent. */
   readonly id: string;
-  readonly type: 'PERSON' | 'SOFTWARE_AGENT' | 'ORGANIZATION';
+  readonly type: "PERSON" | "SOFTWARE_AGENT" | "ORGANIZATION";
   readonly version?: string;
 }
 
 export const PROV_RELATIONS = [
-  'used',
-  'wasGeneratedBy',
-  'wasDerivedFrom',
-  'wasAttributedTo',
-  'wasAssociatedWith',
-  'hadPrimarySource',
-  'wasQuotedFrom',
-  'wasRevisionOf',
-  'alternateOf',
-  'specializationOf'
+  "used",
+  "wasGeneratedBy",
+  "wasDerivedFrom",
+  "wasAttributedTo",
+  "wasAssociatedWith",
+  "hadPrimarySource",
+  "wasQuotedFrom",
+  "wasRevisionOf",
+  "alternateOf",
+  "specializationOf",
 ] as const;
 export type ProvRelation = (typeof PROV_RELATIONS)[number];
 
@@ -108,7 +108,7 @@ export interface TraceContext {
  * semantics map to W3C PROV-DM / PROV-O; runtime tracing uses W3C Trace Context.
  */
 export interface AssuranceEnvelope<TPayload> {
-  readonly schemaVersion: '1.0.0';
+  readonly schemaVersion: "1.0.0";
   readonly layerId: LayerId;
   readonly runId: string;
   readonly trace: TraceContext;
