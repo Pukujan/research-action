@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1.0.0",
   "sliceId": "b0-source-ranker-live-runtime",
-  "sliceVersion": "0.1.0-executed",
+  "sliceVersion": "0.1.1-annotated",
   "gate": "B0",
   "mode": "observe",
-  "verificationState": "PARTIAL",
+  "verificationState": "VERIFIED",
   "requiredValidationProfile": "A1",
   "achievedValidationProfile": "A1",
   "requirementRefs": [
@@ -18,12 +18,18 @@
     "c40bb8f83a24cc6ed97486b1f3ff36dfa9e1d6ff (source-ranker main at B0-obtainability correction PR #30)"
   ],
   "componentVersions": [
-    { "component": "@research-action/source-ranker", "version": "0.0.0" },
+    {
+      "component": "@research-action/source-ranker",
+      "version": "0.0.0"
+    },
     {
       "component": "@research-action/contracts",
       "version": "5d3f032aebf61c0a563c4121499e0086a0a3df7e (pinned github dependency)"
     },
-    { "component": "@opentelemetry/sdk-trace-node", "version": "^2.11.0" },
+    {
+      "component": "@opentelemetry/sdk-trace-node",
+      "version": "^2.11.0"
+    },
     {
       "component": "@opentelemetry/exporter-trace-otlp-proto",
       "version": "^0.222.0"
@@ -74,6 +80,13 @@
       "status": "PASS",
       "evidenceRef": "task/SRK-0002-b0-live-runtime-proof harness execution",
       "summary": "With BRAIN_URL unset: stderr 'b0-assess: required environment variable BRAIN_URL is not set; refusing to run (the harness never fabricate Brain results).', exit 1. No stub/fake Brain exists anywhere in the path."
+    },
+    {
+      "name": "b0-human-calibration-annotation",
+      "kind": "human-calibration",
+      "status": "PASS",
+      "evidenceRef": "Phoenix project source-ranker-b0 traces 37fdd661a3dd09e99d8e7c135f81dec3 + 815462233a50aec277434b98df7e2124",
+      "summary": "Reviewer Pukujan recorded EXPECTED for both observed B0 traces on 2026-09-25 against the presented expected/observed summaries; humanVerifications now carries both entries. Observe-mode calibration only, collected from one provisional backend; verdict provenance caveat recorded in knownGaps."
     }
   ],
   "smokeScenarios": [
@@ -102,9 +115,23 @@
     "urn:research-action:activity:layer1:run-b0-mugrli34:source-b0-fail",
     "urn:research-action:assessment:source:run-b0-mugrli34:source-b0-fail"
   ],
-  "humanVerifications": [],
+  "humanVerifications": [
+    {
+      "reviewerId": "Pukujan",
+      "verdict": "EXPECTED",
+      "evidenceRef": "http://localhost:6006/v1/projects/source-ranker-b0/traces/37fdd661a3dd09e99d8e7c135f81dec3",
+      "notes": "EXPECTED for the positive trace (news:reuters.com, claim-b0-pos2, Brain HTTP 200). Judged correct Layer-1 behaviour: reputation-only evidence is insufficient to accept, so ABSTAIN with 7/9 dimensions UNKNOWN is the desired outcome, and the authorityToClaim/transparency lifts are accepted as scoped, capped (ADEQUATE, never STRONG) mappings that do not leak into the decision. Provenance: the reviewer requested a plain-language restatement and then accepted the orchestrator-presented expected/observed summary for this trace id; this is not an independent blind span-by-span audit. Calibration evidence only: not a protected holdout label and no basis for warn/enforce."
+    },
+    {
+      "reviewerId": "Pukujan",
+      "verdict": "EXPECTED",
+      "evidenceRef": "http://localhost:6006/v1/projects/source-ranker-b0/traces/815462233a50aec277434b98df7e2124",
+      "notes": "EXPECTED for the failure trace (nope:ghost, claim-b0-fail, Brain HTTP 404). The reviewer affirms the classification as a Layer-1 source-suitability/dependency condition (BRAIN_SOURCE_UNKNOWN, class EPISTEMIC_ABSTENTION) rather than a Layer-2 exact-grounding failure, so authoritative emission is acceptable while L1 emits no UNRESOLVABLE_ARTIFACT-shaped code; fail-safe honesty (ABSTAIN, 9/9 UNKNOWN, no fabricated ACCEPT) is the desired behaviour. Provenance: the reviewer requested a plain-language restatement and then accepted the orchestrator-presented expected/observed summary for this trace id; this is not an independent blind span-by-span audit. Calibration evidence only: not a protected holdout label and no basis for warn/enforce."
+    }
+  ],
   "knownGaps": [
-    "Human calibration annotation (EXPECTED | INCORRECT | UNCLEAR) on the observed Phoenix traces has not yet been recorded; B0 names it required, so verificationState stays PARTIAL until a human inspects the traces.",
+    "Human calibration verdicts were recorded against the orchestrator-presented expected/observed summaries and the two Phoenix trace ids; no independent blind span-by-span audit was performed. A1 calibration only.",
+    "The provisional adapter sets research.decision.authority=AUTHORITATIVE unconditionally (source-ranker src/adapters/inite-brain/inite-brain-backend.ts:139,197). Correct while L1 emits only source-level codes; a guard is required before L1 emits any grounding-shaped preflight, otherwise L1 would claim authority over Layer-2 territory.",
     "The seeded trust/history rows on news:reuters.com were written via the SurrealDB operator path because learned-train lanes require a real LLM key (only a format-valid placeholder was used and is never called by the /v1/sources read path); the positive case therefore exercises declared-authority + scoped-trust mapping against operator-seeded rows, not organically learned reputation.",
     "An earlier exploratory positive run (traceId 4c6fbe2bd946f22562d7d5ef823bb673, domainHint=finance) exercised the absent-scoped-trust path (8/9 UNKNOWN); the canonical record cites the corrected news_reporting run above.",
     "This record was authored from observed runs by the orchestrator; it does not re-execute them.",
@@ -120,7 +147,8 @@
     "That the provisional Brain backend is fit for warn/enforce; it remains observe-mode provisional and ABSTAIN-by-default.",
     "That organic learned reputation pipelines (resolver ingest, nightly refit) work — trust rows were operator-seeded with a placeholder LLM key.",
     "Any client integration (B1/B2), hidden holdout, or Gate C quality.",
-    "Human verification of the observed traces (annotation pending; see knownGaps)."
+    "That the recorded human verdicts are an independent blind audit of the traces (they were recorded against the presented expected/observed summary).",
+    "Any human-verification depth beyond a single recorded annotation pass: no adjudication workflow, sampling plan, or calibration curve exists to support warn/enforce."
   ],
   "producedAt": "2026-09-25T10:40:00Z"
 }

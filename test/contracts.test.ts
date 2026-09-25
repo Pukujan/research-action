@@ -35,6 +35,17 @@ type ExecutedSliceFixture = SliceFixture & {
   achievedValidationProfile: string;
 };
 
+type B0Fixture = SliceFixture & {
+  traceIds: string[];
+  knownGaps: string[];
+  humanVerifications: Array<{
+    verdict: string;
+    reviewerId?: string;
+    evidenceRef?: string;
+    notes?: string;
+  }>;
+};
+
 function readJson<T>(path: string): T {
   const parsed: unknown = JSON.parse(readFileSync(resolve(path), "utf8"));
   return parsed as T;
@@ -114,18 +125,38 @@ describe("Gate A contracts", () => {
     );
   });
 
-  it("validates the executed B0 slice verification fixture", () => {
-    const b0Fixture = readJson<SliceFixture & { traceIds: string[] }>(
+  it("validates the human-annotated B0 slice verification fixture", () => {
+    const b0Fixture = readJson<B0Fixture>(
       "fixtures/v1/slice-verification-b0-executed.json",
     );
     const validate = ajv.compile(sliceVerificationSchema);
     expect(validate(b0Fixture), JSON.stringify(validate.errors)).toBe(true);
-    expect(b0Fixture.verificationState).toBe("PARTIAL");
+    expect(b0Fixture.verificationState).toBe("VERIFIED");
     expect(b0Fixture.checks.every((check) => check.status === "PASS")).toBe(
       true,
     );
     expect(b0Fixture.traceIds.length).toBeGreaterThan(0);
     expect(b0Fixture.doesNotProve.length).toBeGreaterThan(0);
+  });
+
+  it("keeps B0 VERIFIED only while every observed trace carries a human EXPECTED verdict", () => {
+    const b0Fixture = readJson<B0Fixture>(
+      "fixtures/v1/slice-verification-b0-executed.json",
+    );
+    expect(b0Fixture.humanVerifications.length).toBe(b0Fixture.traceIds.length);
+    for (const verification of b0Fixture.humanVerifications) {
+      expect(verification.verdict).toBe("EXPECTED");
+      expect(verification.reviewerId).toBeTruthy();
+      expect(verification.evidenceRef).toBeTruthy();
+      expect(b0Fixture.traceIds).toContain(
+        (verification.evidenceRef ?? "").split("/").pop(),
+      );
+    }
+    expect(
+      b0Fixture.humanVerifications.every((verification) =>
+        (verification.notes ?? "").includes("blind span-by-span audit"),
+      ),
+    ).toBe(true);
   });
 
   it("keeps the executed fixture's VERIFIED claim backed by commit refs and passing checks", () => {
