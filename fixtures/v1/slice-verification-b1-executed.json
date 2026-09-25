@@ -13,7 +13,7 @@
     "https://github.com/Pukujan/research-action/issues/6"
   ],
   "commitRefs": [
-    "7f1dcbe4492a5fd6f15f0beb6e044a71c72d0c58 (source-ranker main after PR #36 merge; heads a54dc0d3…  feat(b1) + 9e1ed900cb6ea9cc94b5936171cdc91334e884a1 task-projection fill, branch task/SRK-0008-b1-omp-assured-mcp-client)",
+    "7f1dcbe4492a5fd6f15f0beb6e044a71c72d0c58 (source-ranker main after PR #36 merge; heads `a54dc0dda69d7911b6452ed882ced0f6b797b42f` (feat(b1)) + 9e1ed900cb6ea9cc94b5936171cdc91334e884a1 task-projection fill, branch task/SRK-0008-b1-omp-assured-mcp-client)",
     "3a33d2239bbc0fbb932f3bdff042644899e225d9 (inite-ai/inite-brain-service, self-hosted, same runtime as B0)"
   ],
   "componentVersions": [
