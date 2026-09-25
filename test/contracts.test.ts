@@ -29,6 +29,10 @@ type SliceFixture = {
   doesNotProve: string[];
 };
 
+type ExecutedSliceFixture = SliceFixture & {
+  commitRefs: string[];
+};
+
 function readJson<T>(path: string): T {
   const parsed: unknown = JSON.parse(readFileSync(resolve(path), "utf8"));
   return parsed as T;
@@ -50,6 +54,9 @@ describe("Gate A contracts", () => {
   );
   const sliceFixture = readJson<SliceFixture>(
     "fixtures/v1/slice-verification-gate-a.json",
+  );
+  const executedFixture = readJson<ExecutedSliceFixture>(
+    "fixtures/v1/slice-verification-gate-a-executed.json",
   );
 
   it("validates the canonical envelope fixture", () => {
@@ -96,5 +103,22 @@ describe("Gate A contracts", () => {
       sliceFixture.checks.every((check) => check.status === "NOT_RUN"),
     ).toBe(true);
     expect(sliceFixture.doesNotProve.length).toBeGreaterThan(0);
+  });
+
+  it("validates the executed slice verification fixture", () => {
+    const validate = ajv.compile(sliceVerificationSchema);
+    expect(validate(executedFixture), JSON.stringify(validate.errors)).toBe(
+      true,
+    );
+  });
+
+  it("keeps the executed fixture's VERIFIED claim backed by commit refs and passing checks", () => {
+    if (executedFixture.verificationState === "VERIFIED") {
+      expect(executedFixture.commitRefs.length).toBeGreaterThan(0);
+      expect(
+        executedFixture.checks.every((check) => check.status === "PASS"),
+      ).toBe(true);
+    }
+    expect(executedFixture.doesNotProve.length).toBeGreaterThan(0);
   });
 });
