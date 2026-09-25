@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0.0",
+  "sliceId": "b1-omp-explicit-assured-client",
+  "sliceVersion": "0.1.0-executed",
+  "gate": "B1",
+  "mode": "observe",
+  "verificationState": "VERIFIED",
+  "requiredValidationProfile": "A1",
+  "achievedValidationProfile": "A1",
+  "requirementRefs": [
+    "https://github.com/Pukujan/source-ranker/issues/7",
+    "https://github.com/Pukujan/research-action/issues/2",
+    "https://github.com/Pukujan/research-action/issues/6"
+  ],
+  "commitRefs": [
+    "7f1dcbe4492a5fd6f15f0beb6e044a71c72d0c58 (source-ranker main after PR #36 merge; heads a54dc0d3…  feat(b1) + 9e1ed900cb6ea9cc94b5936171cdc91334e884a1 task-projection fill, branch task/SRK-0008-b1-omp-assured-mcp-client)",
+    "3a33d2239bbc0fbb932f3bdff042644899e225d9 (inite-ai/inite-brain-service, self-hosted, same runtime as B0)"
+  ],
+  "componentVersions": [
+    { "component": "@research-action/source-ranker", "version": "0.0.0" },
+    {
+      "component": "@research-action/contracts",
+      "version": "5d3f032aebf61c0a563c4121499e0086a0a3df7e (pinned github dependency, unchanged by B1)"
+    },
+    { "component": "@modelcontextprotocol/sdk", "version": "1.30.1" },
+    { "component": "tsx", "version": "4.23.15" },
+    { "component": "omp (client host)", "version": "18.3.0" }
+  ],
+  "environmentFingerprint": "Local macOS darwin arm64; node v24.13.0, npm 11.6.2. Runtimes live from B0 bring-up: self-hosted INITE Brain http://localhost:3030 (docker compose) and Phoenix http://localhost:6006 (arizephoenix/phoenix server 20.16.0, project source-ranker-b1). Client invoked via `omp -p ... --mode text` from the SRK-0008 managed worktree with project-scoped .omp/mcp.json.",
+  "checks": [
+    {
+      "name": "b1-static-gates",
+      "kind": "ci-baseline",
+      "status": "PASS",
+      "evidenceRef": "https://github.com/Pukujan/source-ranker/actions/runs/36178081373 + /36178462003 (required layer1, PR #36 heads); post-merge main run 36178699237 green at 7f1dcbe4492a5fd6f15f0beb6e044a71c72d0c58",
+      "summary": "npm run ci observed green on the task branch: prettier/eslint/tsc clean; vitest 7 files / 43 tests (39 pre-existing + 4 new report-contract tests). Core src/ports and src/adapters semantics unchanged."
+    },
+    {
+      "name": "mcp-stdio-handshake-and-tools-list",
+      "kind": "runtime",
+      "status": "PASS",
+      "evidenceRef": "raw JSON-RPC smoke over stdio: initialize -> serverInfo {name: source-ranker-b1}; tools/list -> [assured_path_status, assess_source]",
+      "summary": "Fail-fast also observed live: with BRAIN_URL/BRAIN_KEY unset the server exits 1 printing 'b1-mcp-server: required environment variable BRAIN_URL is not set; refusing to run (the server never fabricates Brain results).' No stub/fake Brain exists anywhere in the path."
+    },
+    {
+      "name": "omp-client-explicit-invocation",
+      "kind": "runtime",
+      "status": "PASS",
+      "evidenceRef": "omp/18.3.0 `omp -p ... --mode text` transcript from pcm/worktree/SRK-0008 (project-scoped .omp/mcp.json discovery)",
+      "summary": "The agent called assured_path_status then assess_source twice per an explicit assured-workflow prompt and printed both full reports verbatim. Observed pitfall recorded: using the BRAIN_API_KEYS hash-array element as bearer yields HTTP 401; the adapter then honestly reports INITE_BRAIN_UNAVAILABLE + ABSTAIN with all dimensions UNKNOWN (never a fabricated ACCEPT). With the raw BRAIN_KEY bootstrap line the positive path returns 200."
+    },
+    {
+      "name": "b1-traces-exported-to-phoenix",
+      "kind": "runtime",
+      "status": "PASS",
+      "evidenceRef": "Phoenix GraphQL getTraceByOtelId: canonical traces 1a81d8e017f2eea8fb8b9ded36c3dbb5 + 0b75b83a62db7540df43716d42e6a1fe root span source.assess in project source-ranker-b1; exploratory runs bc07ebeaabae8cbc6bedcaf8c978e612, 5ab51f7f44266358620ae6f91f08de72, 7fbe8bac76753f0401ddf410ef4f0331 also present",
+      "summary": "Every report carries trace_id (request-supplied) plus otel_trace_id (exported span) and an inspect= URL keyed on otel_trace_id; both canonical traces queryable with decision identity."
+    }
+  ],
+  "smokeScenarios": [
+    {
+      "name": "b1-positive-assessment-via-omp",
+      "expected": "Live omp client receives the full assured-evidence report before the source is usable: assessment id, decision, owningLayer=1/scope=source-suitability/policyId/authority, policy+evaluator versions, claim/source/intended-use, all nine dimensions with reasons (UNKNOWN never elided), failures list, evidence-root id, trace ids, Phoenix inspect link, observed brain.http_status.",
+      "observed": "decision=ABSTAIN; brain.http_status=200; failures: none; authorityToClaim=ADEQUATE (Brain domain news_reporting agreementRate=0.930 over 12 samples, declared authority=0.900; marked ADEQUATE not STRONG as not task-benchmarked); transparency=ADEQUATE; remaining 7 dimensions UNKNOWN with explicit reasons; evidence_root_id=urn:research-action:evidence-root:UNKNOWN; trace_id=9e0758f4f964ca8d41ab32236d7e90ae; otel_trace_id=1a81d8e017f2eea8fb8b9ded36c3dbb5; inspect link resolves in Phoenix project source-ranker-b1; policy/evaluator version b1-omp-mcp; run-b1-muhcfsbj / claim-b1-canonical-pos / source news:reuters.com.",
+      "status": "PASS",
+      "traceId": "1a81d8e017f2eea8fb8b9ded36c3dbb5"
+    },
+    {
+      "name": "b1-failure-unknown-source-via-omp",
+      "expected": "Unknown sourceKey through the live client -> Brain 404 -> BRAIN_SOURCE_UNKNOWN + ABSTAIN, 9/9 UNKNOWN, no fabricated ACCEPT, exported trace queryable.",
+      "observed": "decision=ABSTAIN; brain.http_status=404; code=BRAIN_SOURCE_UNKNOWN class=EPISTEMIC_ABSTENTION retryable=false message='INITE Brain has no declared or learned reputation for source nope:ghost.'; all 9 dimensions UNKNOWN; trace_id=321df817340a46eaf18a1203b0b3c6cb; otel_trace_id=0b75b83a62db7540df43716d42e6a1fe; run-b1-muhcfse1 / claim-b1-canonical-fail.",
+      "status": "PASS",
+      "traceId": "0b75b83a62db7540df43716d42e6a1fe"
+    }
+  ],
+  "traceIds": [
+    "1a81d8e017f2eea8fb8b9ded36c3dbb5",
+    "0b75b83a62db7540df43716d42e6a1fe"
+  ],
+  "provRefs": [
+    "urn:research-action:activity:layer1:run-b1-muhcfsbj:source-news%3Areuters.com",
+    "urn:research-action:assessment:source:run-b1-muhcfsbj:source-news%3Areuters.com",
+    "urn:research-action:activity:layer1:run-b1-muhcfse1:source-nope%3Aghost",
+    "urn:research-action:assessment:source:run-b1-muhcfse1:source-nope%3Aghost"
+  ],
+  "humanVerifications": [],
+  "knownGaps": [
+    "This record was authored from observed runs by the orchestrator; it does not re-execute them.",
+    "No separate human annotation was solicited for B1: LOCAL-CODEX-HANDOFF Phase 4 requires client-visible fields, not a human verdict; the assessment-value semantics (ABSTAIN-on-reputation, BRAIN_SOURCE_UNKNOWN fail-safe) were already annotated EXPECTED at B0 (see slice-verification-b0-executed.json humanVerifications). This is a B1 convention decision, recorded here rather than silently assumed.",
+    "The explicit-only guarantee is contractual (tool description + docs/b1-runbook.md), not an audited property of omp: no claim is made that all omp research traffic routes through assess_source; automatic interception remains unproven and out of scope.",
+    "trace_id (request-supplied) and otel_trace_id (exported span) differ by design in the B1 harness; inspect links and Phoenix correlation use otel_trace_id. Downstream consumers must key correlation on otel_trace_id.",
+    "Brain trust rows remain operator-seeded (B0 caveat inherited); placeholder LLM key never called on the read path.",
+    "No B2 portability, benchmark, or Gate C holdout evidence exists.",
+    "research.decision.authority=AUTHORITATIVE is still set unconditionally by the provisional adapter (B0 knownGap, inherited); guard required before any Layer-2-shaped preflight is emitted through this surface."
+  ],
+  "proves": [
+    "Exactly one real agent client (omp 18.3.0) completed an explicit assured MCP workflow end-to-end: stdio MCP server -> canonical SourceAssuranceBackend port -> provisional INITE Brain adapter -> live self-hosted Brain -> full assured-evidence report printed by the client -> OTel source.assess export queryable in Phoenix.",
+    "The B1 report contract: every observed and tested report carries assessment id, decision, owningLayer=1, scope=source-suitability, policyId, authority status, policy/evaluator versions (b1-omp-mcp), claim/source/intended-use, all nine dimensions with reasons (UNKNOWN never elided), failures list, evidence-root id, trace ids, and inspect link (4 visible dev tests over recorded payloads).",
+    "Fail-safe honesty holds through the client path: 404 -> BRAIN_SOURCE_UNKNOWN + ABSTAIN; misconfigured auth (401) -> INITE_BRAIN_UNAVAILABLE + ABSTAIN with all dimensions UNKNOWN; missing env -> fail-fast exit 1; ACCEPT never emitted in any observed or tested mode."
+  ],
+  "doesNotProve": [
+    "That Layer 1 source-suitability judgments are accurate, task-matched, benchmarked, or adopted: client smoke success is not Layer-1 accuracy.",
+    "That the provisional backend is fit for warn/enforce; observe mode only.",
+    "That any host (including omp) routes all evidence traffic through Layer 1; the assured path is explicit-call-only.",
+    "That the report format is ergonomically accepted by a human reviewer (not separately solicited; see knownGaps).",
+    "B2 portability to a second client, Gate C benchmark/holdout quality, or organic learned-reputation pipelines."
+  ],
+  "producedAt": "2026-09-25T19:35:00Z"
+}

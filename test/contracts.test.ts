@@ -46,6 +46,12 @@ type B0Fixture = SliceFixture & {
   }>;
 };
 
+type B1Fixture = SliceFixture & {
+  traceIds: string[];
+  knownGaps: string[];
+  humanVerifications: Array<{ verdict: string }>;
+};
+
 function readJson<T>(path: string): T {
   const parsed: unknown = JSON.parse(readFileSync(resolve(path), "utf8"));
   return parsed as T;
@@ -157,6 +163,29 @@ describe("Gate A contracts", () => {
         (verification.notes ?? "").includes("blind span-by-span audit"),
       ),
     ).toBe(true);
+  });
+
+  it("validates the executed B1 client slice verification fixture", () => {
+    const b1Fixture = readJson<B1Fixture>(
+      "fixtures/v1/slice-verification-b1-executed.json",
+    );
+    const validate = ajv.compile(sliceVerificationSchema);
+    expect(validate(b1Fixture), JSON.stringify(validate.errors)).toBe(true);
+    expect(b1Fixture.verificationState).toBe("VERIFIED");
+    expect(b1Fixture.checks.every((check) => check.status === "PASS")).toBe(
+      true,
+    );
+    expect(b1Fixture.traceIds.length).toBeGreaterThan(0);
+    // B1 records the explicit-only guarantee and the no-human-annotation
+    // convention rather than asserting a client-side human verdict.
+    expect(
+      b1Fixture.knownGaps.some(
+        (gap) =>
+          gap.includes("explicit-call-only") ||
+          gap.includes("No separate human annotation"),
+      ),
+    ).toBe(true);
+    expect(b1Fixture.doesNotProve.length).toBeGreaterThan(0);
   });
 
   it("keeps the executed fixture's VERIFIED claim backed by commit refs and passing checks", () => {
