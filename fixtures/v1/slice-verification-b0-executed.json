@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.0.0",
+  "sliceId": "b0-source-ranker-live-runtime",
+  "sliceVersion": "0.1.0-executed",
+  "gate": "B0",
+  "mode": "observe",
+  "verificationState": "PARTIAL",
+  "requiredValidationProfile": "A1",
+  "achievedValidationProfile": "A1",
+  "requirementRefs": [
+    "https://github.com/Pukujan/source-ranker/issues/5",
+    "https://github.com/Pukujan/research-action/issues/2",
+    "https://github.com/Pukujan/research-action/issues/6"
+  ],
+  "commitRefs": [
+    "bfb63d208bd285866b668e802bb82bfb3050e83a (source-ranker main after PR #31 merge; harness heads a3347d0bc0a05f6545dfab9f827b460820dba480 + c820772bf98778a6ced6a434593bc6e3651bf3cc, merged via a594d804c9a60c82768809612499d7570cb9ce91)",
+    "3a33d2239bbc0fbb932f3bdff042644899e225d9 (inite-ai/inite-brain-service, AGPL-3.0, self-hosted)",
+    "c40bb8f83a24cc6ed97486b1f3ff36dfa9e1d6ff (source-ranker main at B0-obtainability correction PR #30)"
+  ],
+  "componentVersions": [
+    { "component": "@research-action/source-ranker", "version": "0.0.0" },
+    {
+      "component": "@research-action/contracts",
+      "version": "5d3f032aebf61c0a563c4121499e0086a0a3df7e (pinned github dependency)"
+    },
+    { "component": "@opentelemetry/sdk-trace-node", "version": "^2.11.0" },
+    {
+      "component": "@opentelemetry/exporter-trace-otlp-proto",
+      "version": "^0.222.0"
+    },
+    {
+      "component": "@opentelemetry/api",
+      "version": "1.9.1 (single deduped copy)"
+    },
+    {
+      "component": "inite-brain-service image",
+      "version": "inite-brain-service-brain:latest sha256:406c6543aaff26a949d2b3be1e7a690274bcda25953c83425fc9409b186fa8ee"
+    },
+    {
+      "component": "surrealdb",
+      "version": "surrealdb/surrealdb:v3.2.4 sha256:51baed8709f57f67dcf04b30e3177db846803fa9342dae2be58c6fa5f8d59843"
+    },
+    {
+      "component": "phoenix",
+      "version": "arizephoenix/phoenix:latest sha256:d55a4ffac8c670e2d0bf72e44e81e32a73e832b7ce449e6e4567487adfa9d8d6 (server 20.16.0)"
+    }
+  ],
+  "environmentFingerprint": "Local macOS darwin arm64; node v24.13.0, npm 11.6.2; Docker daemon 29.4.1. Runtimes: inite-brain-service via docker compose (brain http://localhost:3030, surrealdb http://localhost:8000), Phoenix via docker run (http://localhost:6006 UI/OTLP-HTTP, 4317 gRPC).",
+  "checks": [
+    {
+      "name": "b0-harness-static-gates",
+      "kind": "ci-baseline",
+      "status": "PASS",
+      "evidenceRef": "https://github.com/Pukujan/source-ranker/actions/runs/36119963047",
+      "summary": "Required CI layer1 green on PR #31 (head a594d804c9a60c82768809612499d7570cb9ce91); npm run ci observed locally on the branch: prettier/eslint/tsc clean, vitest 6 files / 39 tests."
+    },
+    {
+      "name": "brain-self-hosted-healthy-auth",
+      "kind": "runtime",
+      "status": "PASS",
+      "evidenceRef": "~/services/inite-brain-service (docker compose ps: brain Up(healthy) 0.0.0.0:3030->3000, surrealdb Up(healthy) 0.0.0.0:8000->8000)",
+      "summary": "GET /health -> 200; GET /v1/sources without key -> 401 Unauthorized; with local bootstrap bearer key -> 200 JSON. Key material never committed; branch secret-scan of task/SRK-0002-b0-live-runtime-proof clean."
+    },
+    {
+      "name": "otel-export-reaches-phoenix",
+      "kind": "runtime",
+      "status": "PASS",
+      "evidenceRef": "Phoenix GraphQL projects query: project source-ranker-b0 present; trace() lookups by the recorded traceIds return the source.assess spans",
+      "summary": "source.assess spans exported via @opentelemetry/exporter-trace-otlp-proto to http://localhost:6006/v1/traces with x-project-name routing. Empirical pitfall recorded: @opentelemetry/exporter-trace-otlp-http 0.222.0 serializes OTLP/JSON and Phoenix 20.16.0 rejects it with 415 Unsupported content type; the protobuf exporter returns ExportResultCode 0 and spans are queryable."
+    },
+    {
+      "name": "b0-harness-fail-fast",
+      "kind": "runtime",
+      "status": "PASS",
+      "evidenceRef": "task/SRK-0002-b0-live-runtime-proof harness execution",
+      "summary": "With BRAIN_URL unset: stderr 'b0-assess: required environment variable BRAIN_URL is not set; refusing to run (the harness never fabricate Brain results).', exit 1. No stub/fake Brain exists anywhere in the path."
+    }
+  ],
+  "smokeScenarios": [
+    {
+      "name": "positive-real-source-assessment",
+      "expected": "Live self-hosted INITE Brain 200 for seeded real website source news:reuters.com with domainHint=news_reporting; authorityToClaim lifted to ADEQUATE by declared authority + scoped trust while unsupported dimensions stay UNKNOWN; decision ABSTAIN with full identity; trace exported with PROV refs.",
+      "observed": "brain.http_status=200, decision=ABSTAIN, failure_codes=[], 7/9 dimensions UNKNOWN: authorityToClaim=ADEQUATE (declared authLevel=0.9 + scoped news_reporting trust agreementRate=0.93 over 12 samples) and transparency=ADEQUATE (declared website identity); directness/methodology/reproducibility/temporalFit/versionFit/independence/conflictOfInterest remained UNKNOWN. hard_failure_count=0, epistemic_state=INSUFFICIENT_EVIDENCE. Phoenix span attributes verified for run-b0-mugsiwnz / claim-b0-pos2: research.decision.scope=source-suitability, research.decision.policy_id=layer1-source-suitability, research.decision.authority=AUTHORITATIVE, assurance.layer=1, prov.activity_id=urn:research-action:activity:layer1:run-b0-mugsiwnz:source-b0-pos2, prov.entity_id=urn:research-action:assessment:source:run-b0-mugsiwnz:source-b0-pos2, inite_brain.source_key=news:reuters.com, source.uri=https://www.reuters.com, intended_use=news-verification. The same-environment direct backend probe reproduced the mapping (authorityToClaim ADEQUATE, transparency ADEQUATE, decision ABSTAIN).",
+      "status": "PASS",
+      "traceId": "37fdd661a3dd09e99d8e7c135f81dec3"
+    },
+    {
+      "name": "failure-unknown-source-abstain",
+      "expected": "Unknown sourceKey -> Brain 404 -> adapter maps null -> explicit BRAIN_SOURCE_UNKNOWN failure + ABSTAIN; no fabricated ACCEPT; trace exported and queryable.",
+      "observed": "brain.http_status=404, failure_codes=[BRAIN_SOURCE_UNKNOWN], decision=ABSTAIN, hard_failure_count=1, all 9 dimensions UNKNOWN, epistemic_state=INSUFFICIENT_EVIDENCE; Phoenix span shows full decision identity + PROV urns for run-b0-mugrli34 / claim-b0-fail / source uri brain:nope:ghost.",
+      "status": "PASS",
+      "traceId": "815462233a50aec277434b98df7e2124"
+    }
+  ],
+  "traceIds": [
+    "37fdd661a3dd09e99d8e7c135f81dec3",
+    "815462233a50aec277434b98df7e2124"
+  ],
+  "provRefs": [
+    "urn:research-action:activity:layer1:run-b0-mugsiwnz:source-b0-pos2",
+    "urn:research-action:assessment:source:run-b0-mugsiwnz:source-b0-pos2",
+    "urn:research-action:activity:layer1:run-b0-mugrli34:source-b0-fail",
+    "urn:research-action:assessment:source:run-b0-mugrli34:source-b0-fail"
+  ],
+  "humanVerifications": [],
+  "knownGaps": [
+    "Human calibration annotation (EXPECTED | INCORRECT | UNCLEAR) on the observed Phoenix traces has not yet been recorded; B0 names it required, so verificationState stays PARTIAL until a human inspects the traces.",
+    "The seeded trust/history rows on news:reuters.com were written via the SurrealDB operator path because learned-train lanes require a real LLM key (only a format-valid placeholder was used and is never called by the /v1/sources read path); the positive case therefore exercises declared-authority + scoped-trust mapping against operator-seeded rows, not organically learned reputation.",
+    "An earlier exploratory positive run (traceId 4c6fbe2bd946f22562d7d5ef823bb673, domainHint=finance) exercised the absent-scoped-trust path (8/9 UNKNOWN); the canonical record cites the corrected news_reporting run above.",
+    "This record was authored from observed runs by the orchestrator; it does not re-execute them.",
+    "No client integration (B1/B2), benchmark, or holdout (Gate C) evidence exists."
+  ],
+  "proves": [
+    "A real (non-stub) INITE Brain service, self-hosted from inite-ai/inite-brain-service@3a33d2239bbc0fbb932f3bdff042644899e225d9, answered the exact adapter-contract route GET /v1/sources/{sourceKey} with shapes the adapter's zod boundary parses unchanged.",
+    "The chain real source -> source-ranker -> INITE Brain -> SourceAssessment -> OTel -> Phoenix ran end-to-end: source.assess traces (positive 200 with authorityToClaim+transparency ADEQUATE from seeded scoped trust, failure 404) were inspected in Phoenix carrying decision identity (owningLayer=1, scope=source-suitability, policyId=layer1-source-suitability, authority=AUTHORITATIVE), UNKNOWN dimensions, failures/reasons, policy/evaluator version b0-live-runtime, and W3C PROV activity/entity refs.",
+    "Failure-mode honesty held live: unknown source -> BRAIN_SOURCE_UNKNOWN + ABSTAIN; missing env -> fail-fast exit 1; in no observed mode did the provisional backend emit ACCEPT."
+  ],
+  "doesNotProve": [
+    "That Layer 1 source-suitability judgments are task-matched, benchmarked, or adopted.",
+    "That the provisional Brain backend is fit for warn/enforce; it remains observe-mode provisional and ABSTAIN-by-default.",
+    "That organic learned reputation pipelines (resolver ingest, nightly refit) work — trust rows were operator-seeded with a placeholder LLM key.",
+    "Any client integration (B1/B2), hidden holdout, or Gate C quality.",
+    "Human verification of the observed traces (annotation pending; see knownGaps)."
+  ],
+  "producedAt": "2026-09-25T10:40:00Z"
+}
